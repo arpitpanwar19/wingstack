@@ -115,3 +115,29 @@ export async function generateSprintRoadmap(payload) {
   const { data } = await apiClient.post('/api/roadmap/generate', payload);
   return data;
 }
+
+
+export async function evaluateKillSwitchProof(payload) {
+  const res = await fetch(`${API_BASE_URL}/api/kill-switch/evaluate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText || `Kill-switch evaluation failed (${res.status})`);
+  }
+  return res.json();
+}
+
+export async function getKillSwitchStatus(partnershipId, userId = "") {
+  const query = userId ? `?user_id=${encodeURIComponent(userId)}` : "";
+  const res = await fetch(
+    `${API_BASE_URL}/api/kill-switch/status/${encodeURIComponent(partnershipId)}${query}`
+  );
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText || `Failed to load kill-switch status (${res.status})`);
+  }
+  return res.json();
+}
