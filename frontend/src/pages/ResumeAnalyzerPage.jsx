@@ -19,7 +19,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Notification from '../components/Notification';
 import ResumeUploader from '../components/ResumeUploader';
 import { useWorkspace } from '../context/WorkspaceContext';
-import { analyzeProfile } from '../services/api';
+import { analyzeProfile, generateSprintRoadmap } from '../services/api';
 
 function getSkillLabels(value) {
   if (!Array.isArray(value)) return [];
@@ -75,6 +75,26 @@ export default function ResumeAnalyzerPage() {
     responseData?.verified_skills ?? responseData?.top_skills
   );
   const missingSkills = getSkillLabels(responseData?.missing_skills);
+  const [roadmap, setRoadmap] = useState(null);
+  const [generatingRoadmap, setGeneratingRoadmap] = useState(false);
+  const [roadmapError, setRoadmapError] = useState('');
+
+  const handleGenerateRoadmap = async () => {
+    setRoadmapError('');
+    setGeneratingRoadmap(true);
+    try {
+      const data = await generateSprintRoadmap({
+        target_role: form.target_role.trim() || profile?.target_role || 'Software Engineer',
+        missing_skills: missingSkills,
+        intensity_mode: form.intensity_mode || 'Normal Mode',
+      });
+      setRoadmap(data);
+    } catch (err) {
+      setRoadmapError(err?.response?.data?.detail || err?.message || 'Failed to generate 14-day sprint roadmap.');
+    } finally {
+      setGeneratingRoadmap(false);
+    }
+  };
 
   return (
     <AppLayout
@@ -233,6 +253,7 @@ export default function ResumeAnalyzerPage() {
             <LoadingSpinner size="lg" label="Analyzing your profile..." />
           </div>
         ) : currentAnalysis ? (
+          <>
           <GlassCard glow="blue" className="space-y-5">
             <p className="eyebrow">LIVE SERVICE RESPONSE</p>
             <h2 className="text-xl font-semibold text-white">Backend analysis</h2>
@@ -269,12 +290,92 @@ export default function ResumeAnalyzerPage() {
                 )}
               </div>
             </div>
-            <Link to="/career-scout">
-              <GlassButton variant="secondary" iconRight={ArrowRight}>
-                View Career Scout
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <GlassButton
+                type="button"
+                onClick={handleGenerateRoadmap}
+                loading={generatingRoadmap}
+                icon={Sparkles}
+              >
+                {roadmap ? 'Regenerate 14-Day AI Sprint' : 'Generate 14-Day AI Sprint Roadmap'}
               </GlassButton>
-            </Link>
+              <Link to="/career-scout">
+                <GlassButton variant="secondary" iconRight={ArrowRight}>
+                  View Career Scout
+                </GlassButton>
+              </Link>
+            </div>
+            {roadmapError && (
+              <p className="text-sm text-rose-300">{roadmapError}</p>
+            )}
           </GlassCard>
+
+          {roadmap && (
+            <GlassCard glow="purple" className="space-y-6">
+              <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-4">
+                <div>
+                  <p className="eyebrow"><Sparkles className="h-3.5 w-3.5" /> AI SPRINT ROADMAP</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">
+                    {roadmap.sprint_title || '14-Day Skill Gap Sprint'}
+                  </h2>
+                </div>
+                <span className="rounded-full border border-honey-300/30 bg-honey-300/10 px-3 py-1 font-mono text-xs text-honey-200">
+                  {form.intensity_mode || 'Normal Mode'}
+                </span>
+              </div>
+
+              {roadmap.recommended_project && (
+                <div className="rounded-2xl border border-honey-300/20 bg-honey-300/5 p-5 space-y-2">
+                  <p className="font-mono text-xs uppercase tracking-wider text-honey-200">
+                    Capstone Mini-Project
+                  </p>
+                  <h3 className="text-lg font-semibold text-white">
+                    {roadmap.recommended_project.title}
+                  </h3>
+                  {Array.isArray(roadmap.recommended_project.stack) && (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {roadmap.recommended_project.stack.map((tech) => (
+                        <span
+                          key={tech}
+                          className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-0.5 font-mono text-xs text-slate-200"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {roadmap.recommended_project.why_it_helps && (
+                    <p className="pt-1 text-sm text-slate-300">
+                      {roadmap.recommended_project.why_it_helps}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {(roadmap.days || []).map((item) => (
+                  <div
+                    key={item.day}
+                    className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 space-y-2"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="rounded-lg border border-honey-300/30 bg-honey-300/10 px-2.5 py-0.5 font-mono text-xs font-semibold text-honey-200">
+                        Day {item.day}
+                      </span>
+                      <span className="text-xs font-medium text-plum-200">
+                        {item.focus_skill}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium text-white">{item.task}</p>
+                    <p className="text-xs text-slate-400">
+                      <span className="font-semibold text-slate-300">Deliverable:</span> {item.deliverable}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </GlassCard>
+          )}
+          </>
         ) : (
           <GlassCard glow="purple" className="relative space-y-3 overflow-hidden py-12 text-center">
             <div className="absolute inset-x-1/3 top-0 h-32 bg-plum-700/20 blur-3xl" />
