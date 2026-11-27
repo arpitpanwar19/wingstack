@@ -409,3 +409,60 @@ def simulate_midnight(partnership_id: int, force_miss: bool = True):
         "streak_days": partnership["streak_days"],
         "message": "Both partners verified before midnight. Sprint continues!"
     }
+
+# 6. AI 14-DAY SPRINT ROADMAP GENERATOR (VAIBHAV)
+from pydantic import BaseModel as _RoadmapBaseModel
+from services.roadmap_agent import generate_sprint_roadmap
+from services.kill_switch_agent import (
+    evaluate_proof_with_agent_a5,
+    get_kill_switch_status,
+    init_kill_switch_tables,
+)
+
+class RoadmapRequest(_RoadmapBaseModel):
+    target_role: str
+    missing_skills: list[str]
+    intensity_mode: str = "Standard"
+
+@app.post("/api/roadmap/generate")
+def create_sprint_roadmap(payload: RoadmapRequest):
+    try:
+        return generate_sprint_roadmap(
+            target_role=payload.target_role,
+            missing_skills=payload.missing_skills,
+            intensity_mode=payload.intensity_mode,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+class KillSwitchEvaluateRequest(BaseModel):
+    partnership_id: str = "pod-alpha-1"
+    user_id: str = "saurav-kumar"
+    daily_task: str = "Complete daily War Room technical task"
+    proof_text: str = ""
+    streak_broken: bool = False
+
+
+@app.on_event("startup")
+def _init_kill_switch_on_startup():
+    init_kill_switch_tables()
+
+
+@app.post("/api/kill-switch/evaluate")
+def api_kill_switch_evaluate(payload: KillSwitchEvaluateRequest):
+    return evaluate_proof_with_agent_a5(
+        partnership_id=payload.partnership_id,
+        user_id=payload.user_id,
+        daily_task=payload.daily_task,
+        proof_text=payload.proof_text,
+        streak_broken=payload.streak_broken,
+    )
+
+
+@app.get("/api/kill-switch/status/{partnership_id}")
+def api_kill_switch_status(partnership_id: str, user_id: Optional[str] = None):
+    status = get_kill_switch_status(partnership_id)
+    if user_id and not status.get("audit_logs"):
+        status["user_id"] = user_id
+    return status
