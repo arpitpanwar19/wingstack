@@ -25,6 +25,7 @@ import { useWorkspace } from '../context/WorkspaceContext';
 
 function getMatchScore(job) {
   const rawScore =
+    job.match_score ??
     job.role_fit_score ??
     job.fit_score ??
     job.matchPercentage ??

@@ -15,6 +15,7 @@ function asText(value) {
 
 export default function JobCard({ job, compact = false }) {
   const rawMatch =
+    job.match_score ??
     job.role_fit_score ??
     job.fit_score ??
     job.matchPercentage ??
@@ -27,10 +28,10 @@ export default function JobCard({ job, compact = false }) {
   const missingSkills = asSkillNames(job.missingSkills ?? job.missing_skills);
   const applyUrl = job.apply_url ?? job.applyUrl ?? job.application_url ?? job.url;
   const outreachPitch = asText(
-    job.ai_outreach_pitch ?? job.outreach_pitch ?? job.outreachPitch
+    job.ai_outreach_pitch ?? job.outreach_pitch ?? job.outreachPitch ?? job.why_fit
   );
   const location = asText(job.location ?? job.location_type);
-  const workMode = asText(job.workMode ?? job.work_mode ?? job.work_type);
+  const workMode = asText(job.workMode ?? job.work_mode ?? job.work_type ?? job.platform);
   const salary = asText(job.salary ?? job.salary_range);
   const description = asText(job.description ?? job.summary);
   const postedAt = asText(job.postedAt ?? job.posted_at);
