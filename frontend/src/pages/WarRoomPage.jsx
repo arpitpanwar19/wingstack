@@ -213,7 +213,7 @@ export default function WarRoomPage() {
                 <div className="rounded-xl border border-honey-100/10 bg-black/20 p-3">
                   <dt className="text-[10px] tracking-wider text-slate-500">STREAK</dt>
                   <dd className="mt-1 font-mono text-sm text-honey-100">
-                    {partnershipData?.streak ?? partnershipData?.streak_days ?? 'Not returned'}
+                    {partnershipData?.updated_streak ?? partnershipData?.streak ?? partnershipData?.streak_days ?? 'Not returned'}
                   </dd>
                 </div>
               </dl>
@@ -256,13 +256,13 @@ export default function WarRoomPage() {
               {verification && (
                 <div className="rounded-xl border border-honey-300/15 bg-honey-300/[0.04] p-4">
                   <p className="text-xs font-semibold tracking-wider text-honey-200">API VERIFICATION RESPONSE</p>
-                  {(verification.streak ?? verification.streak_days) !== undefined && (
+                  {(verification.updated_streak ?? verification.streak ?? verification.streak_days) !== undefined && (
                     <p className="mt-2 text-sm text-slate-200">
-                      Streak: {verification.streak ?? verification.streak_days}
+                      Streak: {verification.updated_streak ?? verification.streak ?? verification.streak_days}
                     </p>
                   )}
-                  {verification.message && (
-                    <p className="mt-1 text-sm text-slate-300">{verification.message}</p>
+                  {(verification.ai_feedback ?? verification.message) && (
+                    <p className="mt-1 text-sm text-slate-300">{verification.ai_feedback ?? verification.message}</p>
                   )}
                   <details className="mt-3 text-xs text-slate-400">
                     <summary className="cursor-pointer text-honey-200">Full response</summary>
