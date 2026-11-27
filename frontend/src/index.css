@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #09070a;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #09070a;
+    color: #f5efe5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgba(240, 201, 134, 0.28);
+    color: #fff8e9;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(240, 201, 134, 0.78);
+    outline-offset: 3px;
+  }
+
+  select option {
+    background-color: #1a101c;
+    color: #f5efe5;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply relative isolate overflow-hidden rounded-[1.65rem] border backdrop-blur-2xl shadow-glass;
+    background: linear-gradient(145deg, rgba(59, 22, 58, 0.36), rgba(17, 12, 19, 0.92) 54%, rgba(9, 7, 10, 0.96));
+    border-color: rgba(240, 201, 134, 0.14);
+  }
+
+  .glass-panel::before {
+    content: '';
+    @apply pointer-events-none absolute inset-x-8 top-0 z-10 h-px;
+    background: linear-gradient(90deg, transparent, rgba(240, 201, 134, 0.62), transparent);
+  }
+
+  .glass-panel::after {
+    content: '';
+    @apply pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full;
+    background: radial-gradient(circle, rgba(59, 22, 58, 0.28), transparent 70%);
+  }
+
+  .glass-panel > * {
+    @apply relative z-[1];
+  }
+
+  .glass-panel-hover {
+    @apply glass-panel transition-all duration-300 hover:-translate-y-1 hover:shadow-glass-lg;
+  }
+
+  .glass-panel-hover:hover {
+    border-color: rgba(240, 201, 134, 0.3);
+    background: linear-gradient(145deg, rgba(59, 22, 58, 0.48), rgba(17, 12, 19, 0.94) 54%, rgba(9, 7, 10, 0.98));
+  }
+
+  .glass-subtle {
+    @apply border backdrop-blur-xl;
+    border-color: rgba(183, 107, 162, 0.15);
+    background: rgba(23, 10, 24, 0.35);
+  }
+
+  .glass-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-md;
+    border-color: rgba(240, 201, 134, 0.2);
+    background: rgba(23, 10, 24, 0.55);
+    color: #fef0d2;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-honey-200 via-honey-400 to-honey-100 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-bright {
+    @apply bg-gradient-to-r from-white via-honey-100 to-honey-300 bg-clip-text text-transparent;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-honey-300;
+  }
+
+  .gold-rule {
+    @apply h-px w-full;
+    background: linear-gradient(90deg, rgba(240, 201, 134, 0.55), rgba(59, 22, 58, 0.1), transparent);
+  }
+}
+
+.bg-cyber-grid {
+  background-image:
+    linear-gradient(to right, rgba(240, 201, 134, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(240, 201, 134, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.login-brand-watermark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(3%);
+  white-space: nowrap;
+}
+
+.login-brand-monogram {
+  color: transparent;
+  font-size: clamp(18rem, 58vw, 54rem);
+  font-weight: 900;
+  letter-spacing: -0.12em;
+  line-height: 0.72;
+  -webkit-text-stroke: 1px rgba(186, 200, 221, 0.075);
+  text-shadow: 0 0 80px rgba(59, 130, 246, 0.06);
+}
+
+.login-brand-wordmark {
+  margin-top: clamp(1.5rem, 5vw, 4rem);
+  color: rgba(226, 232, 240, 0.045);
+  font-size: clamp(1.4rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.war-room-fire {
+  background-image:
+    radial-gradient(ellipse at 8% 105%, rgba(240, 201, 134, 0.12), transparent 48%),
+    radial-gradient(ellipse at 92% 105%, rgba(59, 22, 58, 0.22), transparent 46%),
+    radial-gradient(ellipse at 50% 120%, rgba(240, 201, 134, 0.08), transparent 56%);
+  background-size: 120% 150%, 120% 150%, 100% 140%;
+  animation: war-room-firelight 4.5s ease-in-out infinite alternate;
+}
+
+.war-room-fire-icon {
+  transform-origin: 50% 85%;
+  filter: drop-shadow(0 0 5px rgba(240, 201, 134, 0.55));
+  animation: war-room-flame-flicker 1.8s ease-in-out infinite alternate;
+}
+
+.war-room-glitch {
+  position: relative;
+  display: inline-block;
+  text-shadow: 0 0 18px rgba(240, 201, 134, 0.16);
+}
+
+.war-room-glitch::before,
+.war-room-glitch::after {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  content: attr(data-text);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.war-room-glitch::before {
+  color: rgba(240, 201, 134, 0.8);
+  animation: war-room-glitch 6s steps(1, end) infinite;
+}
+
+.war-room-glitch::after {
+  color: rgba(183, 107, 162, 0.72);
+  animation: war-room-glitch 6s steps(1, end) 3s infinite;
+}
+
+@keyframes war-room-firelight {
+  from {
+    background-position: 0% 100%, 100% 100%, 50% 100%;
+  }
+  to {
+    background-position: 4% 92%, 96% 94%, 52% 92%;
+  }
+}
+
+@keyframes war-room-flame-flicker {
+  from {
+    transform: rotate(-7deg) scale(0.94);
+  }
+  to {
+    transform: rotate(6deg) scale(1.08);
+  }
+}
+
+@keyframes war-room-glitch {
+  0%,
+  89%,
+  100% {
+    clip-path: inset(50% 0 50% 0);
+    opacity: 0;
+    transform: translateX(0);
+  }
+  90% {
+    clip-path: inset(12% 0 76% 0);
+    opacity: 0.72;
+    transform: translateX(1px);
+  }
+  91% {
+    clip-path: inset(46% 0 39% 0);
+    opacity: 0.58;
+    transform: translateX(-1px);
+  }
+  92% {
+    clip-path: inset(78% 0 9% 0);
+    opacity: 0.66;
+    transform: translateX(1px);
+  }
+  93% {
+    clip-path: inset(50% 0 50% 0);
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .war-room-fire,
+  .war-room-fire-icon,
+  .war-room-glitch::before,
+  .war-room-glitch::after {
+    animation: none;
+  }
+}
+
+/* Custom Dark Glass Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(9, 7, 10, 0.9);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(240, 201, 134, 0.24);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(240, 201, 134, 0.58);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}

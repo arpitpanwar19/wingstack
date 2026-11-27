@@ -2,6 +2,11 @@
 __pycache__/
 *.py[codz]
 *$py.class
+node_modules/
+dist/
+.vite/
+*.sqlite3
+*.db
 
 # C extensions
 *.so
