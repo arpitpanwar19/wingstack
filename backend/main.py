@@ -409,3 +409,23 @@ def simulate_midnight(partnership_id: int, force_miss: bool = True):
         "streak_days": partnership["streak_days"],
         "message": "Both partners verified before midnight. Sprint continues!"
     }
+
+# 6. AI 14-DAY SPRINT ROADMAP GENERATOR (VAIBHAV)
+from pydantic import BaseModel as _RoadmapBaseModel
+from services.roadmap_agent import generate_sprint_roadmap
+
+class RoadmapRequest(_RoadmapBaseModel):
+    target_role: str
+    missing_skills: list[str]
+    intensity_mode: str = "Standard"
+
+@app.post("/api/roadmap/generate")
+def create_sprint_roadmap(payload: RoadmapRequest):
+    try:
+        return generate_sprint_roadmap(
+            target_role=payload.target_role,
+            missing_skills=payload.missing_skills,
+            intensity_mode=payload.intensity_mode,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))

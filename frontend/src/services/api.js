@@ -110,3 +110,8 @@ export async function simulateMidnight(partnershipId, forceMiss = true) {
   );
   return data;
 }
+
+export async function generateSprintRoadmap(payload) {
+  const { data } = await apiClient.post('/api/roadmap/generate', payload);
+  return data;
+}

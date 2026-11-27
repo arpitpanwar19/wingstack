@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Compass,
@@ -36,7 +36,7 @@ export default function Sidebar({
     <div className="flex h-full flex-col justify-between border-r border-honey-200/10 bg-gradient-to-b from-void-900/95 via-void-950/95 to-black/95 p-5 backdrop-blur-2xl">
       <div className="space-y-6">
         <div className="flex items-center justify-between px-2 pt-1">
-          <NavLink to="/" onClick={onCloseMobile}>
+          <NavLink to="/dashboard" onClick={onCloseMobile}>
             <WingStackLogo size="sm" showTagline />
           </NavLink>
           <button
