@@ -86,7 +86,7 @@ function requireIntegerId(id, fieldName) {
 
 export async function getMatchedJobs(userId) {
   const id = requireIntegerId(userId, 'user_id');
-  const { data } = await apiClient.get(`/api/jobs/match/${id}`);
+  const { data } = await apiClient.get(`/api/jobs/match/${id}`, { timeout: 60000 });
   return data;
 }
 
@@ -97,7 +97,7 @@ export async function findPod(userId) {
 }
 
 export async function verifySprintProof(proof) {
-  const { data } = await apiClient.post('/api/sprint/verify', proof);
+  const { data } = await apiClient.post('/api/sprint/verify', proof, { timeout: 60000 });
   return data;
 }
 
@@ -112,6 +112,6 @@ export async function simulateMidnight(partnershipId, forceMiss = true) {
 }
 
 export async function generateSprintRoadmap(payload) {
-  const { data } = await apiClient.post('/api/roadmap/generate', payload);
+  const { data } = await apiClient.post('/api/roadmap/generate', payload, { timeout: 60000 });
   return data;
 }
