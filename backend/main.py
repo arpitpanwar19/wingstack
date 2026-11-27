@@ -158,44 +158,16 @@ async def analyze_profile(
     intensity_mode: str = Form("Hell Mode"),
     github_username: str = Form(""),
     codeforces_handle: str = Form(""),
+    leetcode_username: str = Form(""),
+    gfg_handle: str = Form(""),
     resume: Optional[UploadFile] = File(None)
 ):
-    resume_text = ""
-    if resume:
-        try:
-            pdf_bytes = await resume.read()
-            reader = PdfReader(BytesIO(pdf_bytes))
-            for page in reader.pages[:3]:
-                resume_text += page.extract_text() or ""
-        except Exception:
-            resume_text = "Resume uploaded (text extraction fallback)."
-
-    gh_stats = fetch_github_stats(github_username)
-    cf_stats = fetch_codeforces_stats(codeforces_handle)
-
-    system_prompt = (
-        "You are WingStack's AI Career Profiler. Analyze the candidate's resume text and coding stats. "
-        "Return JSON with exact keys: "
-        "'readiness_score' (integer 45-95), "
-        "'verified_skills' (list of 5-7 concrete technical skills), "
-        "'missing_skills' (list of 3-4 key skills needed for their target role), "
-        "'summary' (2 sharp sentences evaluating their readiness)."
-    )
-    user_prompt = (
-        f"Candidate: {name}\nTarget Role: {target_role}\n"
-        f"GitHub Stats: {json.dumps(gh_stats)}\nCodeforces Stats: {json.dumps(cf_stats)}\n"
-        f"Resume Text: {resume_text[:3000]}"
-    )
-
     try:
-        ai_result = ask_groq_json(system_prompt, user_prompt)
-    except Exception:
-        ai_result = {
-            "readiness_score": 74,
-            "verified_skills": gh_stats["languages"] or ["Python", "C++", "Git", "DSA"],
-            "missing_skills": ["System Design", "Docker", "Cloud Deployment"],
-            "summary": f"Solid coding foundation for {target_role}. Focus on closing cloud and production deployment gaps."
-        }
+        from services.resume_analyzer import analyze_candidate_profile
+    except ImportError:
+        from backend.services.resume_analyzer import analyze_candidate_profile
+
+    pdf_bytes = await resume.read() if resume else None
 
     conn = get_db()
     cur = conn.cursor()
@@ -203,14 +175,48 @@ async def analyze_profile(
         INSERT INTO users (name, target_role, intensity_mode, github_username, codeforces_handle,
                            readiness_score, verified_skills, missing_skills, summary)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        name, target_role, intensity_mode, github_username, codeforces_handle,
-        ai_result.get("readiness_score", 75),
-        json.dumps(ai_result.get("verified_skills", [])),
-        json.dumps(ai_result.get("missing_skills", [])),
-        ai_result.get("summary", "")
-    ))
+    """, (name, target_role, intensity_mode, github_username, codeforces_handle, 75, "[]", "[]", ""))
     user_id = cur.lastrowid
+    conn.commit()
+
+    try:
+        ai_result = await analyze_candidate_profile(
+            user_id=user_id,
+            full_name=name,
+            target_role=target_role,
+            pdf_bytes=pdf_bytes,
+            github_username=github_username,
+            codeforces_handle=codeforces_handle,
+            leetcode_username=leetcode_username,
+            gfg_handle=gfg_handle,
+        )
+    except Exception as exc:
+        gh_stats = fetch_github_stats(github_username)
+        cf_stats = fetch_codeforces_stats(codeforces_handle)
+        ai_result = {
+            "user_id": user_id,
+            "name": name,
+            "target_role": target_role,
+            "intensity_mode": intensity_mode,
+            "github_stats": gh_stats,
+            "codeforces_stats": cf_stats,
+            "readiness_score": 74,
+            "verified_skills": gh_stats.get("languages") or ["Python", "C++", "Git", "DSA"],
+            "missing_skills": ["System Design", "Docker", "Cloud Deployment"],
+            "summary": f"Solid coding foundation for {target_role}. Focus on closing cloud and deployment gaps.",
+            "fallback_reason": str(exc),
+        }
+
+    score = ai_result.get("readiness_score") or ai_result.get("ats_score") or 75
+    v_skills = ai_result.get("verified_skills", [])
+    m_skills = ai_result.get("missing_skills", [])
+    summary = ai_result.get("summary") or ai_result.get("overall_verdict") or ""
+
+    cur.execute("""
+        UPDATE users
+        SET readiness_score = ?, verified_skills = ?, missing_skills = ?, summary = ?
+        WHERE id = ?
+    """, (score, json.dumps(v_skills), json.dumps(m_skills), summary, user_id))
     conn.commit()
     conn.close()
 
@@ -219,92 +225,148 @@ async def analyze_profile(
         "name": name,
         "target_role": target_role,
         "intensity_mode": intensity_mode,
-        "github_stats": gh_stats,
-        "codeforces_stats": cf_stats,
-        **ai_result
+        "readiness_score": score,
+        "verified_skills": v_skills,
+        "missing_skills": m_skills,
+        "summary": summary,
+        **ai_result,
     }
 
 
-# 2. AUTONOMOUS CAREER PAGE SCOUT & FIT SCORER
+# 2. AUTONOMOUS CAREER PAGE SCOUT & FIT SCORER (LIVE + HTTP 200 LINK VERIFIER)
+async def _verify_live_job_url(client, job: dict) -> dict | None:
+    url = (job.get("apply_url") or job.get("url") or "").strip()
+    if not url.startswith("http"):
+        return None
+    bad_index_patterns = ("/jobs?", "/search?", "naukri.com/jobs-in-", "internshala.com/internships/")
+    if any(p in url.lower() for p in bad_index_patterns) and url.count("/") <= 4:
+        return None
+    try:
+        resp = await client.get(url, follow_redirects=True, timeout=6.0)
+        body = resp.text[:3000].lower()
+        if resp.status_code == 200 and "page not found" not in body and "job not found" not in body:
+            return job
+    except Exception:
+        return None
+    return None
+
+
 @app.get("/api/jobs/match/{user_id}")
-def match_jobs(user_id: int):
+async def match_jobs(user_id: int):
+    import asyncio
+    import httpx
+    try:
+        from services.job_scout import find_and_score_jobs
+    except ImportError:
+        from backend.services.job_scout import find_and_score_jobs
+
     conn = get_db()
     user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
     conn.close()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    raw_jobs = []
     try:
-        res = requests.get("https://remotive.com/api/remote-jobs?category=software-dev&limit=8", timeout=6)
-        if res.status_code == 200:
-            for j in res.json().get("jobs", [])[:6]:
-                raw_jobs.append({
-                    "title": j.get("title"),
-                    "company": j.get("company_name"),
-                    "location": j.get("candidate_required_location", "Remote"),
-                    "apply_url": j.get("url"),
-                    "tags": j.get("tags", [])[:5]
-                })
+        verified_skills = json.loads(user["verified_skills"] or "[]")
+    except Exception:
+        verified_skills = ["Python", "C++", "SQL", "Git"]
+
+    user_profile = {
+        "user_id": user["id"],
+        "full_name": user["name"],
+        "target_role": user["target_role"],
+        "verified_skills": verified_skills,
+        "summary": user["summary"] or "",
+        "preferred_location": "India / Remote",
+    }
+
+    try:
+        raw_matched = await find_and_score_jobs(user_profile)
+        async with httpx.AsyncClient(headers={"User-Agent": "Mozilla/5.0"}) as client:
+            checked = await asyncio.gather(*[_verify_live_job_url(client, j) for j in raw_matched])
+        live_jobs = [j for j in checked if j is not None]
+        if live_jobs:
+            return {"jobs": live_jobs}
     except Exception:
         pass
 
-    if not raw_jobs:
-        raw_jobs = [
-            {"title": "Software Engineer - Backend", "company": "Razorpay", "location": "Bengaluru / Hybrid",
-             "apply_url": "https://razorpay.com/jobs/", "tags": ["Python", "APIs", "SQL"]},
-            {"title": "SDE-1 (Full Stack)", "company": "BrowserStack", "location": "Remote / Mumbai",
-             "apply_url": "https://www.browserstack.com/careers", "tags": ["React", "Node.js", "REST"]},
-            {"title": "Junior Backend Developer", "company": "Postman", "location": "Bengaluru",
-             "apply_url": "https://www.postman.com/company/careers/", "tags": ["JavaScript", "APIs", "Git"]}
-        ]
-
-    system_prompt = (
-        "You are WingStack's Career Scout Agent. Score how well each job fits the user's skills. "
-        "Return JSON with key 'jobs' containing a list of objects, each with: "
-        "'title', 'company', 'location', 'apply_url', 'match_percentage' (integer 60-96), "
-        "'missing_skills' (list of 1-3 gaps), and 'tailored_pitch' (1 punchy sentence to use when applying)."
-    )
-    user_prompt = (
-        f"User Target Role: {user['target_role']}\n"
-        f"User Skills: {user['verified_skills']}\n"
-        f"Jobs List: {json.dumps(raw_jobs)}"
-    )
-
-    try:
-        scored = ask_groq_json(system_prompt, user_prompt)
-        return scored
-    except Exception:
-        fallback_jobs = [
-            {**j, "match_percentage": 84, "missing_skills": ["Docker"],
-             "tailored_pitch": f"Strong hands-on builder in {user['target_role']} ready to ship production features."}
-            for j in raw_jobs
-        ]
-        return {"jobs": fallback_jobs}
+    # Resilient fallback if external search quota/network hits a snag
+    fallback_jobs = [
+        {
+            "title": f"{user['target_role']} (Backend & APIs)",
+            "company": "Razorpay",
+            "location": "Bengaluru / Hybrid",
+            "platform": "Careers",
+            "apply_url": "https://razorpay.com/jobs/",
+            "match_score": 88,
+            "match_percentage": 88,
+            "missing_skills": ["Kubernetes"],
+            "why_fit": f"Strong alignment with {', '.join(verified_skills[:3]) or 'core engineering stack'}.",
+            "tailored_pitch": f"Built production APIs with {', '.join(verified_skills[:2]) or 'Python & SQL'} ready for scale."
+        },
+        {
+            "title": "Software Engineer - Full Stack",
+            "company": "BrowserStack",
+            "location": "Mumbai / Remote",
+            "platform": "Careers",
+            "apply_url": "https://www.browserstack.com/careers",
+            "match_score": 85,
+            "match_percentage": 85,
+            "missing_skills": ["Docker"],
+            "why_fit": "Demonstrated full-stack shipping velocity and algorithmic problem-solving.",
+            "tailored_pitch": "Hands-on builder experienced in fast iteration and automated testing workflows."
+        }
+    ]
+    return {"jobs": fallback_jobs}
 
 
-# 3. BLIND MATCHMAKING ENGINE
+# 3. BLIND MATCHMAKING ENGINE (AI WAR ROOM PARTNER + SOLO FALLBACK)
 @app.post("/api/match/find/{user_id}")
-def find_wingman(user_id: int):
+async def find_wingman(user_id: int):
+    try:
+        from services.warroom_agent import match_warroom_partner
+    except ImportError:
+        from backend.services.warroom_agent import match_warroom_partner
+
     conn = get_db()
     user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
     if not user:
         conn.close()
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Find a peer with matching intensity or role (excluding current user)
-    partner = conn.execute(
-        "SELECT * FROM users WHERE id != ? AND intensity_mode = ? LIMIT 1",
-        (user_id, user["intensity_mode"])
-    ).fetchone()
-    if not partner:
-        partner = conn.execute("SELECT * FROM users WHERE id != ? LIMIT 1", (user_id,)).fetchone()
+    peers = conn.execute("SELECT * FROM users WHERE id != ? ORDER BY id DESC LIMIT 10", (user_id,)).fetchall()
+    current_user_dict = {
+        "user_id": user["id"],
+        "name": user["name"],
+        "target_role": user["target_role"],
+        "verified_skills": json.loads(user["verified_skills"] or "[]"),
+        "missing_skills": json.loads(user["missing_skills"] or "[]"),
+        "intensity_mode": user["intensity_mode"],
+    }
+    candidate_partners = [
+        {
+            "user_id": p["id"],
+            "name": p["name"],
+            "target_role": p["target_role"],
+            "verified_skills": json.loads(p["verified_skills"] or "[]"),
+            "intensity_mode": p["intensity_mode"],
+            "readiness_score": p["readiness_score"],
+        }
+        for p in peers
+    ]
 
+    match_res = await match_warroom_partner(
+        current_user=current_user_dict,
+        candidate_partners=candidate_partners,
+        intensity_mode=user["intensity_mode"] or "Grind",
+    )
+
+    partner_id = match_res.get("partner_id") or user_id
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO partnerships (user1_id, user2_id, target_role, intensity_mode, streak_days, user1_verified_today, user2_verified_today, status)
         VALUES (?, ?, ?, ?, 1, 0, 1, 'ACTIVE')
-    """, (user_id, partner["id"], user["target_role"], user["intensity_mode"]))
+    """, (user_id, partner_id, user["target_role"], user["intensity_mode"]))
     partnership_id = cur.lastrowid
     conn.commit()
     conn.close()
@@ -313,18 +375,22 @@ def find_wingman(user_id: int):
         "partnership_id": partnership_id,
         "status": "ACTIVE",
         "streak_days": 1,
+        "updated_streak": 1,
         "intensity_mode": user["intensity_mode"],
+        "shared_sprint_goal": match_res.get("shared_sprint_goal"),
+        "daily_checkpoint": match_res.get("daily_checkpoint"),
+        "match_reason": match_res.get("match_reason"),
         "wingman": {
-            "name": partner["name"],
-            "target_role": partner["target_role"],
-            "readiness_score": partner["readiness_score"],
-            "verified_skills": json.loads(partner["verified_skills"]),
-            "verified_today": True
-        }
+            "name": match_res.get("partner_name", "AI Sprint Partner"),
+            "target_role": match_res.get("partner_role", user["target_role"]),
+            "readiness_score": match_res.get("compatibility_score", 92),
+            "verified_skills": current_user_dict["verified_skills"][:4],
+            "verified_today": True,
+        },
     }
 
 
-# 4. WAR ROOM AI OPERATIVE (PROOF VERIFICATION)
+# 4. WAR ROOM AI OPERATIVE (LIVE GITHUB API + UNIVERSAL PROOF VERIFICATION)
 class ProofRequest(BaseModel):
     partnership_id: int
     user_id: int
@@ -333,7 +399,12 @@ class ProofRequest(BaseModel):
 
 
 @app.post("/api/sprint/verify")
-def verify_daily_proof(payload: ProofRequest):
+async def verify_daily_proof(payload: ProofRequest):
+    try:
+        from services.warroom_agent import verify_daily_proof as judge_proof
+    except ImportError:
+        from backend.services.warroom_agent import verify_daily_proof as judge_proof
+
     conn = get_db()
     user = conn.execute("SELECT * FROM users WHERE id = ?", (payload.user_id,)).fetchone()
     partnership = conn.execute("SELECT * FROM partnerships WHERE id = ?", (payload.partnership_id,)).fetchone()
@@ -341,41 +412,36 @@ def verify_daily_proof(payload: ProofRequest):
         conn.close()
         raise HTTPException(status_code=404, detail="User or partnership not found")
 
-    system_prompt = (
-        "You are WingStack's strict AI Operative inside a coding accountability War Room. "
-        "Evaluate the developer's daily proof-of-work submission and give them tomorrow's tactical mission "
-        "to close their job skill gaps. Return JSON with exact keys: "
-        "'verified' (boolean, true if proof_url or note shows genuine coding/DSA effort), "
-        "'operative_feedback' (2 direct, motivating tactical sentences), "
-        "'next_mission' (1 specific actionable coding/DSA task for tomorrow)."
-    )
-    user_prompt = (
-        f"Proof URL: {payload.proof_url}\nDeveloper Note: {payload.note}\n"
-        f"Target Role: {user['target_role']}\nMissing Skills to Close: {user['missing_skills']}"
+    verdict = await judge_proof(
+        sprint_goal=f"Close skill gaps for {user['target_role']}: {user['missing_skills']}",
+        daily_checkpoint="Ship verified GitHub commit or solved coding problem",
+        proof_url=payload.proof_url,
+        proof_note=payload.note,
+        current_streak=partnership["streak_days"],
+        user_name=user["name"],
     )
 
-    try:
-        verdict = ask_groq_json(system_prompt, user_prompt)
-    except Exception:
-        verdict = {
-            "verified": True,
-            "operative_feedback": "Proof logged and verified. Your commit momentum keeps the sprint alive.",
-            "next_mission": "Solve 2 medium graph/DP problems and push clean notes to GitHub before midnight."
-        }
-
-    new_streak = partnership["streak_days"] + (1 if verdict.get("verified") else 0)
-    conn.execute(
-        "UPDATE partnerships SET user1_verified_today = 1, streak_days = ? WHERE id = ?",
-        (new_streak, payload.partnership_id)
-    )
-    conn.commit()
+    is_verified = bool(verdict.get("verified"))
+    new_streak = verdict.get("updated_streak", partnership["streak_days"] + (1 if is_verified else 0))
+    if is_verified:
+        conn.execute(
+            "UPDATE partnerships SET user1_verified_today = 1, streak_days = ? WHERE id = ?",
+            (new_streak, payload.partnership_id)
+        )
+        conn.commit()
     conn.close()
 
+    feedback_text = verdict.get("ai_feedback") or verdict.get("operative_feedback") or "Verification complete."
     return {
         "partnership_id": payload.partnership_id,
         "status": "ACTIVE",
+        "verified": is_verified,
         "streak_days": new_streak,
-        **verdict
+        "updated_streak": new_streak,
+        "ai_feedback": feedback_text,
+        "operative_feedback": feedback_text,
+        "live_evidence": verdict.get("live_evidence", ""),
+        "next_mission": verdict.get("next_mission", "Push tomorrow's commit and log your next DSA milestone."),
     }
 
 
@@ -399,6 +465,7 @@ def simulate_midnight(partnership_id: int, force_miss: bool = True):
             "partnership_id": partnership_id,
             "status": "DISSOLVED_KILL_SWITCH",
             "streak_days": 0,
+            "updated_streak": 0,
             "message": "MIDNIGHT PROTOCOL TRIGGERED: Daily proof missing. Streak wiped to 0 and partnership dissolved."
         }
 
@@ -407,6 +474,7 @@ def simulate_midnight(partnership_id: int, force_miss: bool = True):
         "partnership_id": partnership_id,
         "status": "ACTIVE",
         "streak_days": partnership["streak_days"],
+        "updated_streak": partnership["streak_days"],
         "message": "Both partners verified before midnight. Sprint continues!"
     }
 
