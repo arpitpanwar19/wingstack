@@ -1,41 +1,38 @@
 # 🪶 WingStack
+ **AI Career Telemetry, Direct ATS Scout & Accountability Engine**
 
-**Turn raw GitHub commits, Codeforces ratings, and a master PDF into tailored job applications and streak-enforced peer pods.**
-
-Most placement prep fails because you practice DSA in isolation without knowing if you're actually hireable, and then spam the same generic PDF resume across fifty portals. WingStack closes that loop: it cross-checks your resume against your real GitHub repos and Codeforces activity, matches you into a 3–4 person accountability pod stratified by consistency, swaps in relevant GitHub projects to generate company-named ATS resumes, and enforces daily progress with an automated midnight kill switch.
-
----
-
-## ⚙️ How It Works
-
-* **🧭 Signal-Backed Readiness Profiling**
-  Parses your master PDF resume alongside live GitHub repositories and Codeforces stats via Groq (`llama-3.3-70b-versatile`) to flag unverified claims, calculate a readiness score, and pinpoint missing stack requirements.
-* **🪢 Stratified Consistency Pods (3–4 Peers)**
-  Clusters candidates targeting the same engineering role across consistency tiers—pairing one high-streak *Anchor* with *Climbers* and a *Starter*—so motivation flows downward without pairing beginners who drop off together.
-* **🎯 Career Scout & GitHub-Swapped ATS Vault**
-  Ranks live openings against your verified stack with direct career-page links, swaps in your most relevant GitHub projects for that specific company, and exports an ATS-scored PDF saved as `{Name}_{Company}_{Role}_Resume.pdf`.
-* **⏳ Proof Audit & Midnight Kill Switch**
-  Requires verifiable daily proof (commit URLs, problem submissions, or build logs). Missing a deadline triggers an automated streak reset and alerts the pod via Amazon SNS.
+**WingStack** turns fragmented student coding proof into verified job matches and enforced daily execution. Built for CS students preparing for internships and placements, it unifies live coding activity across 7 platforms, harvests openings directly from **155 curated tech company career portals**, stores candidate credentials in an **AWS DynamoDB + S3 Vault**, and enforces daily shipping through a **War Room Midnight Kill Switch**.
 
 ---
 
-## 🧱 Tech Stack & Cloud Wiring
+## ✨ Core Architecture & Engines
 
-| Layer | Technology | Role |
-| :--- | :--- | :--- |
-| **Client** | React + Vite | Profile Scanner, Career Scout, ATS Resume Vault & War Room UI |
-| **API & Orchestrator** | Python FastAPI + Uvicorn | Deterministic routing, tier clustering & multi-agent control loop (Railway) |
-| **Inference** | Groq (`llama-3.3-70b-versatile`) | Low-latency JSON extraction, repo-to-job matching & resume rewriting |
-| **Object Storage** | Amazon S3 (`wingstack-resumes`) | Master PDFs, daily proof uploads & company-tagged tailored resumes |
-| **State & Memory** | Amazon DynamoDB (`wingstack-data`) | User profiles, cached GitHub repo catalogs, pod state & streak counters |
-| **Alerts & Enforcement** | Amazon SNS (`wingstack-alerts`) | Pod formation broadcasts & midnight Kill Switch notifications |
+### 🔐 1. AWS Candidate Vault (`DynamoDB` + `S3`)
+- **Read-Only Locked Identity:** Profiles lock automatically after verification to prevent accidental drift across ATS and job-matching pipelines, with a dedicated **Edit Profile & Connectors** mode for intentional updates.
+- **AWS S3 Resume Storage (`wingstack-resumes`):** Stores candidate resume PDFs with time-limited presigned URLs for secure one-click viewing.
+- **AWS DynamoDB Persistence (`wingstack-data`):** Syncs candidate metadata, readiness scores, and all 7 competitive/developer platform connectors (`GitHub`, `LeetCode`, `Codeforces`, `GeeksforGeeks`, `CodeChef`, `AtCoder`, `HackerRank`).
+
+### 📊 2. 7-Arena Live Telemetry & ATS Analyzer
+- Queries live stats across **GitHub**, **LeetCode**, **Codeforces**, **GFG**, **CodeChef**, **AtCoder**, and **HackerRank** alongside PDF resume parsing (`pypdf`).
+- Generates a **14-day multi-platform activity graph**, identifies missing role-specific skills, rewrites resume bullets into quantified STAR format, and generates a tailored **14-Day AI Sprint Roadmap**.
+
+### 🎯 3. 155-Company Direct ATS Career Scout & Resume Tailor
+- **Zero Aggregator Spam:** Harvests live engineering & internship openings directly from **155 curated Indian & global tech companies** across **Greenhouse**, **Lever**, **Ashby**, **Workday CXS**, and custom company career portals.
+- **Pre-Scoring & Live Link Verification:** Filters for India / Remote-India early-career roles, verifies live HTTP 200 endpoints, and provides **1-click Resume Tailoring** + cold recruiter outreach drafts per role.
+
+### ⚡ 4. The War Room & Midnight Kill Switch
+- Pairs two students with matching target roles and intensity modes (`Hell Mode`, `Normal Mode`, `Chill Mode`).
+- **API-Verified Proof of Work:** Inspects submitted GitHub commit URLs via the GitHub API to verify real code was shipped.
+- **Midnight Protocol:** Missing a daily checkpoint before midnight wipes the shared streak to `0` and dissolves the partnership.
 
 ---
 
-## 🗂️ Project Layout
+## 🛠️ Tech Stack
 
-```text
-wingstack/
-├── frontend/          # React client
-├── backend/           # FastAPI routes, Groq agent modules & AWS boto3 connectors
-└── README.md
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React, Vite, Tailwind CSS, Lucide Icons, Axios (Deployed on Vercel) |
+| **Backend** | FastAPI, Python, Uvicorn, `httpx`, `pypdf` (Deployed on Railway) |
+| **AI & Inference** | Groq LLM API (`llama-3.3-70b-versatile` / `gpt-oss-120b`), Tavily Search API |
+| **Cloud & Storage** | AWS DynamoDB (`wingstack-data`), AWS S3 (`wingstack-resumes`), SQLite fallback |
+| **Live Data APIs** | Greenhouse, Lever, Ashby, Workday CXS, GitHub REST, LeetCode GraphQL, Codeforces API |
