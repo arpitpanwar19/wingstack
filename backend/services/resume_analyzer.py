@@ -327,6 +327,7 @@ Return ONLY valid JSON matching this exact schema (every array MUST be non-empty
     return {
         "user_id": user_id,
         "resume_parsed": bool(resume_text),
+        "resume_text": resume_text,
         "resume_chars": len(resume_text),
         "readiness_score": int(ai_result.get("readiness_score", 72)),
         "summary": ai_result.get("summary", ""),

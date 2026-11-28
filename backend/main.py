@@ -92,6 +92,10 @@ def init_db():
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, seed_peers)
 
+    try:
+        cur.execute("ALTER TABLE users ADD COLUMN resume_text TEXT DEFAULT ''")
+    except Exception:
+        pass
     conn.commit()
     conn.close()
 
@@ -218,11 +222,12 @@ async def analyze_profile(
     m_skills = ai_result.get("missing_skills", [])
     summary = ai_result.get("summary") or ai_result.get("overall_verdict") or ""
 
+    r_text = ai_result.get("resume_text", "")
     cur.execute("""
         UPDATE users
-        SET readiness_score = ?, verified_skills = ?, missing_skills = ?, summary = ?
+        SET readiness_score = ?, verified_skills = ?, missing_skills = ?, summary = ?, resume_text = ?
         WHERE id = ?
-    """, (score, json.dumps(v_skills), json.dumps(m_skills), summary, user_id))
+    """, (score, json.dumps(v_skills), json.dumps(m_skills), summary, r_text, user_id))
     conn.commit()
     conn.close()
 
@@ -540,6 +545,7 @@ def tailor_resume_for_job(payload: TailorRequest):
         "candidate_name": user["name"],
         "verified_skills": verified_skills,
         "summary": user["summary"],
+        "actual_resume_text": (user["resume_text"] or "")[:4000],
         "target_job_role": payload.role,
         "target_company": payload.company,
         "missing_skills_to_bridge": payload.missing_skills,
