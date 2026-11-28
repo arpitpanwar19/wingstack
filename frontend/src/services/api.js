@@ -45,8 +45,13 @@ export async function analyzeProfile(form, file, onUploadProgress) {
   formData.append('name', form.name);
   formData.append('target_role', form.target_role);
   formData.append('intensity_mode', form.intensity_mode);
-  formData.append('github_username', form.github_username);
-  formData.append('codeforces_handle', form.codeforces_handle);
+  formData.append('github_username', form.github_username || '');
+  formData.append('codeforces_handle', form.codeforces_handle || '');
+  formData.append('leetcode_username', form.leetcode_username || '');
+  formData.append('gfg_handle', form.gfg_handle || '');
+  formData.append('codechef_handle', form.codechef_handle || '');
+  formData.append('atcoder_handle', form.atcoder_handle || '');
+  formData.append('hackerrank_handle', form.hackerrank_handle || '');
   if (file) formData.append('resume', file);
 
   const { data } = await apiClient.post('/api/profile/analyze', formData, {

@@ -160,6 +160,9 @@ async def analyze_profile(
     codeforces_handle: str = Form(""),
     leetcode_username: str = Form(""),
     gfg_handle: str = Form(""),
+    codechef_handle: str = Form(""),
+    atcoder_handle: str = Form(""),
+    hackerrank_handle: str = Form(""),
     resume: Optional[UploadFile] = File(None)
 ):
     try:
@@ -189,6 +192,9 @@ async def analyze_profile(
             codeforces_handle=codeforces_handle,
             leetcode_username=leetcode_username,
             gfg_handle=gfg_handle,
+            codechef_handle=codechef_handle,
+            atcoder_handle=atcoder_handle,
+            hackerrank_handle=hackerrank_handle,
         )
     except Exception as exc:
         gh_stats = fetch_github_stats(github_username)
@@ -380,6 +386,9 @@ async def find_wingman(user_id: int):
         "shared_sprint_goal": match_res.get("shared_sprint_goal"),
         "daily_checkpoint": match_res.get("daily_checkpoint"),
         "match_reason": match_res.get("match_reason"),
+        "partner_name": match_res.get("partner_name", "AI Sprint Partner"),
+        "partner_role": match_res.get("partner_role", user["target_role"]),
+        "compatibility_score": match_res.get("compatibility_score", 92),
         "wingman": {
             "name": match_res.get("partner_name", "AI Sprint Partner"),
             "target_role": match_res.get("partner_role", user["target_role"]),
