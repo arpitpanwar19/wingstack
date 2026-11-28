@@ -39,15 +39,32 @@ export function WorkspaceProvider({ children }) {
       throw new Error('Profile analysis did not return a user_id. Check the API response.');
     }
 
+    const connectors = {
+      github_username: form.github_username || resultUser?.connectors?.github_username || '',
+      leetcode_username: form.leetcode_username || resultUser?.connectors?.leetcode_username || '',
+      codeforces_handle: form.codeforces_handle || resultUser?.connectors?.codeforces_handle || '',
+      gfg_handle: form.gfg_handle || resultUser?.connectors?.gfg_handle || '',
+      codechef_handle: form.codechef_handle || resultUser?.connectors?.codechef_handle || '',
+      atcoder_handle: form.atcoder_handle || resultUser?.connectors?.atcoder_handle || '',
+      hackerrank_handle: form.hackerrank_handle || resultUser?.connectors?.hackerrank_handle || '',
+    };
+
     const profile = {
       name: form.name,
       targetRole: form.target_role,
       intensityMode: form.intensity_mode,
-      githubUsername: form.github_username,
-      codeforcesHandle: form.codeforces_handle,
+      githubUsername: connectors.github_username,
+      codeforcesHandle: connectors.codeforces_handle,
+      leetcodeUsername: connectors.leetcode_username,
+      gfgHandle: connectors.gfg_handle,
+      codechefHandle: connectors.codechef_handle,
+      atcoderHandle: connectors.atcoder_handle,
+      hackerrankHandle: connectors.hackerrank_handle,
+      connectors,
       ...resultUser,
       id: userId,
       user_id: userId,
+      profile_locked: true,
     };
 
     setWorkspace((current) => ({ ...current, profile, analysis: response }));

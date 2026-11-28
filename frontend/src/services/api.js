@@ -52,6 +52,9 @@ export async function analyzeProfile(form, file, onUploadProgress) {
   formData.append('codechef_handle', form.codechef_handle || '');
   formData.append('atcoder_handle', form.atcoder_handle || '');
   formData.append('hackerrank_handle', form.hackerrank_handle || '');
+  if (form.existing_user_id !== undefined && form.existing_user_id !== null && form.existing_user_id !== '') {
+    formData.append('existing_user_id', String(form.existing_user_id));
+  }
   if (file) formData.append('resume', file);
 
   const { data } = await apiClient.post('/api/profile/analyze', formData, {
@@ -123,5 +126,11 @@ export async function generateSprintRoadmap(payload) {
 
 export async function tailorResumeForJob(payload) {
   const { data } = await apiClient.post('/api/resume/tailor', payload, { timeout: 60000 });
+  return data;
+}
+
+export async function getProfileVault(userId) {
+  const id = requireIntegerId(userId, 'user_id');
+  const { data } = await apiClient.get(`/api/profile/${id}`);
   return data;
 }

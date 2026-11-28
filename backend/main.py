@@ -92,10 +92,16 @@ def init_db():
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, seed_peers)
 
-    try:
-        cur.execute("ALTER TABLE users ADD COLUMN resume_text TEXT DEFAULT ''")
-    except Exception:
-        pass
+    for col_def in (
+        "resume_text TEXT DEFAULT ''",
+        "connectors_json TEXT DEFAULT '{}'",
+        "resume_s3_key TEXT DEFAULT ''",
+        "resume_filename TEXT DEFAULT ''",
+    ):
+        try:
+            cur.execute(f"ALTER TABLE users ADD COLUMN {col_def}")
+        except Exception:
+            pass
     conn.commit()
     conn.close()
 
@@ -167,7 +173,7 @@ def health_check():
     return {"status": "online", "service": "WingStack AI Career & Accountability Engine"}
 
 
-# 1. UNIFIED PROFILE & AI READINESS SCANNER
+# 1. UNIFIED PROFILE & AI READINESS SCANNER (DYNAMODB + S3 VAULT)
 @app.post("/api/profile/analyze")
 async def analyze_profile(
     name: str = Form(...),
@@ -180,46 +186,79 @@ async def analyze_profile(
     codechef_handle: str = Form(""),
     atcoder_handle: str = Form(""),
     hackerrank_handle: str = Form(""),
-    resume: Optional[UploadFile] = File(None)
+    existing_user_id: Optional[str] = Form(None),
+    resume: Optional[UploadFile] = File(None),
 ):
     try:
         from services.resume_analyzer import analyze_candidate_profile
+        from services.aws_vault import upload_resume_to_s3, save_profile_to_dynamodb, generate_resume_presigned_url
     except ImportError:
         from backend.services.resume_analyzer import analyze_candidate_profile
+        from backend.services.aws_vault import upload_resume_to_s3, save_profile_to_dynamodb, generate_resume_presigned_url
 
     pdf_bytes = await resume.read() if resume else None
+    resume_filename = resume.filename if (resume and resume.filename) else ""
+
+    connectors = {
+        "github_username": github_username.strip(),
+        "leetcode_username": leetcode_username.strip(),
+        "codeforces_handle": codeforces_handle.strip(),
+        "gfg_handle": gfg_handle.strip(),
+        "codechef_handle": codechef_handle.strip(),
+        "atcoder_handle": atcoder_handle.strip(),
+        "hackerrank_handle": hackerrank_handle.strip(),
+    }
 
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO users (name, target_role, intensity_mode, github_username, codeforces_handle,
-                           readiness_score, verified_skills, missing_skills, summary)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (name, target_role, intensity_mode, github_username, codeforces_handle, 75, "[]", "[]", ""))
-    user_id = cur.lastrowid
-    conn.commit()
+
+    user_id = None
+    prev_s3_key = ""
+    prev_resume_filename = ""
+    prev_resume_text = ""
+
+    if existing_user_id and str(existing_user_id).isdigit():
+        row = cur.execute("SELECT * FROM users WHERE id = ?", (int(existing_user_id),)).fetchone()
+        if row:
+            user_id = int(row["id"])
+            prev_s3_key = row["resume_s3_key"] or ""
+            prev_resume_filename = row["resume_filename"] or ""
+            prev_resume_text = row["resume_text"] or ""
+
+    if user_id is None:
+        cur.execute("""
+            INSERT INTO users (name, target_role, intensity_mode, github_username, codeforces_handle,
+                               readiness_score, verified_skills, missing_skills, summary, connectors_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            name.strip(), target_role.strip(), intensity_mode,
+            connectors["github_username"], connectors["codeforces_handle"],
+            75, "[]", "[]", "", json.dumps(connectors),
+        ))
+        user_id = cur.lastrowid
+        conn.commit()
 
     try:
         ai_result = await analyze_candidate_profile(
             user_id=user_id,
-            full_name=name,
-            target_role=target_role,
+            full_name=name.strip(),
+            target_role=target_role.strip(),
             pdf_bytes=pdf_bytes,
-            github_username=github_username,
-            codeforces_handle=codeforces_handle,
-            leetcode_username=leetcode_username,
-            gfg_handle=gfg_handle,
-            codechef_handle=codechef_handle,
-            atcoder_handle=atcoder_handle,
-            hackerrank_handle=hackerrank_handle,
+            github_username=connectors["github_username"],
+            codeforces_handle=connectors["codeforces_handle"],
+            leetcode_username=connectors["leetcode_username"],
+            gfg_handle=connectors["gfg_handle"],
+            codechef_handle=connectors["codechef_handle"],
+            atcoder_handle=connectors["atcoder_handle"],
+            hackerrank_handle=connectors["hackerrank_handle"],
         )
     except Exception as exc:
-        gh_stats = fetch_github_stats(github_username)
-        cf_stats = fetch_codeforces_stats(codeforces_handle)
+        gh_stats = fetch_github_stats(connectors["github_username"])
+        cf_stats = fetch_codeforces_stats(connectors["codeforces_handle"])
         ai_result = {
             "user_id": user_id,
-            "name": name,
-            "target_role": target_role,
+            "name": name.strip(),
+            "target_role": target_role.strip(),
             "intensity_mode": intensity_mode,
             "github_stats": gh_stats,
             "codeforces_stats": cf_stats,
@@ -230,30 +269,114 @@ async def analyze_profile(
             "fallback_reason": str(exc),
         }
 
+    # Upload resume PDF to AWS S3 if provided, otherwise preserve existing S3 key
+    s3_meta = {"s3_key": prev_s3_key, "resume_url": generate_resume_presigned_url(prev_s3_key), "aws_s3_stored": bool(prev_s3_key)}
+    if pdf_bytes:
+        s3_meta = upload_resume_to_s3(user_id, resume_filename or "resume.pdf", pdf_bytes)
+    else:
+        resume_filename = prev_resume_filename
+
     score = ai_result.get("readiness_score") or ai_result.get("ats_score") or 75
     v_skills = ai_result.get("verified_skills", [])
     m_skills = ai_result.get("missing_skills", [])
     summary = ai_result.get("summary") or ai_result.get("overall_verdict") or ""
+    r_text = ai_result.get("resume_text") or prev_resume_text
 
-    r_text = ai_result.get("resume_text", "")
     cur.execute("""
         UPDATE users
-        SET readiness_score = ?, verified_skills = ?, missing_skills = ?, summary = ?, resume_text = ?
+        SET name = ?, target_role = ?, intensity_mode = ?,
+            github_username = ?, codeforces_handle = ?,
+            readiness_score = ?, verified_skills = ?, missing_skills = ?,
+            summary = ?, resume_text = ?, connectors_json = ?,
+            resume_s3_key = ?, resume_filename = ?
         WHERE id = ?
-    """, (score, json.dumps(v_skills), json.dumps(m_skills), summary, r_text, user_id))
+    """, (
+        name.strip(), target_role.strip(), intensity_mode,
+        connectors["github_username"], connectors["codeforces_handle"],
+        score, json.dumps(v_skills), json.dumps(m_skills),
+        summary, r_text, json.dumps(connectors),
+        s3_meta.get("s3_key", ""), resume_filename, user_id,
+    ))
     conn.commit()
     conn.close()
 
-    return {
-        "user_id": user_id,
-        "name": name,
-        "target_role": target_role,
+    dynamo_status = save_profile_to_dynamodb({
+        "user_id": str(user_id),
+        "name": name.strip(),
+        "target_role": target_role.strip(),
         "intensity_mode": intensity_mode,
+        "connectors": connectors,
         "readiness_score": score,
         "verified_skills": v_skills,
         "missing_skills": m_skills,
         "summary": summary,
+        "resume_s3_key": s3_meta.get("s3_key", ""),
+        "resume_filename": resume_filename,
+        "coding_stats": ai_result.get("coding_stats", {}),
+        "profile_locked": True,
+    })
+
+    return {
+        "user_id": user_id,
+        "name": name.strip(),
+        "target_role": target_role.strip(),
+        "intensity_mode": intensity_mode,
+        "connectors": connectors,
+        "readiness_score": score,
+        "verified_skills": v_skills,
+        "missing_skills": m_skills,
+        "summary": summary,
+        "resume_filename": resume_filename,
+        "resume_s3_key": s3_meta.get("s3_key", ""),
+        "resume_url": s3_meta.get("resume_url", ""),
+        "aws_vault": {
+            "dynamodb_synced": bool(dynamo_status.get("aws_dynamo_stored")),
+            "s3_synced": bool(s3_meta.get("aws_s3_stored")),
+        },
+        "profile_locked": True,
         **ai_result,
+    }
+
+
+@app.get("/api/profile/{user_id}")
+def get_profile_vault(user_id: int):
+    try:
+        from services.aws_vault import get_profile_from_dynamodb, generate_resume_presigned_url
+    except ImportError:
+        from backend.services.aws_vault import get_profile_from_dynamodb, generate_resume_presigned_url
+
+    dynamo_item = get_profile_from_dynamodb(user_id)
+    if dynamo_item:
+        return {"source": "aws_dynamodb", **dynamo_item}
+
+    conn = get_db()
+    row = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    connectors = json.loads(row["connectors_json"] or "{}")
+    if not connectors:
+        connectors = {
+            "github_username": row["github_username"] or "",
+            "codeforces_handle": row["codeforces_handle"] or "",
+        }
+    s3_key = row["resume_s3_key"] or ""
+    return {
+        "source": "sqlite_fallback",
+        "user_id": row["id"],
+        "name": row["name"],
+        "target_role": row["target_role"],
+        "intensity_mode": row["intensity_mode"],
+        "connectors": connectors,
+        "readiness_score": row["readiness_score"],
+        "verified_skills": json.loads(row["verified_skills"] or "[]"),
+        "missing_skills": json.loads(row["missing_skills"] or "[]"),
+        "summary": row["summary"] or "",
+        "resume_filename": row["resume_filename"] or "",
+        "resume_s3_key": s3_key,
+        "resume_url": generate_resume_presigned_url(s3_key),
+        "profile_locked": True,
     }
 
 
