@@ -120,3 +120,8 @@ export async function generateSprintRoadmap(payload) {
   const { data } = await apiClient.post('/api/roadmap/generate', payload, { timeout: 60000 });
   return data;
 }
+
+export async function tailorResumeForJob(payload) {
+  const { data } = await apiClient.post('/api/resume/tailor', payload, { timeout: 60000 });
+  return data;
+}

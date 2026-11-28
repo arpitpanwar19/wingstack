@@ -1,6 +1,18 @@
-import React from 'react';
-import { AlertCircle, Briefcase, ExternalLink, MapPin, Sparkles } from 'lucide-react';
+﻿import React, { useState } from 'react';
+import {
+  AlertCircle,
+  Briefcase,
+  Check,
+  Copy,
+  ExternalLink,
+  FileText,
+  Loader2,
+  MapPin,
+  Sparkles,
+} from 'lucide-react';
 import GlassCard from './GlassCard';
+import { useWorkspace } from '../context/WorkspaceContext';
+import { tailorResumeForJob } from '../services/api';
 
 function asSkillNames(value) {
   if (!Array.isArray(value)) return [];
@@ -14,6 +26,14 @@ function asText(value) {
 }
 
 export default function JobCard({ job, compact = false }) {
+  const { profile } = useWorkspace();
+  const userId = profile?.user_id ?? profile?.id;
+
+  const [copiedKey, setCopiedKey] = useState('');
+  const [tailoring, setTailoring] = useState(false);
+  const [tailorResult, setTailorResult] = useState(null);
+  const [tailorError, setTailorError] = useState('');
+
   const rawMatch =
     job.match_score ??
     job.role_fit_score ??
@@ -28,7 +48,11 @@ export default function JobCard({ job, compact = false }) {
   const missingSkills = asSkillNames(job.missingSkills ?? job.missing_skills);
   const applyUrl = job.apply_url ?? job.applyUrl ?? job.application_url ?? job.url;
   const outreachPitch = asText(
-    job.ai_outreach_pitch ?? job.outreach_pitch ?? job.outreachPitch ?? job.why_fit
+    job.tailored_pitch ??
+      job.ai_outreach_pitch ??
+      job.outreach_pitch ??
+      job.outreachPitch ??
+      job.why_fit
   );
   const location = asText(job.location ?? job.location_type);
   const workMode = asText(job.workMode ?? job.work_mode ?? job.work_type ?? job.platform);
@@ -36,6 +60,40 @@ export default function JobCard({ job, compact = false }) {
   const description = asText(job.description ?? job.summary);
   const postedAt = asText(job.postedAt ?? job.posted_at);
   const companyInitials = company.slice(0, 2).toUpperCase();
+
+  const handleCopy = (text, key) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(''), 1800);
+  };
+
+  const handleTailorResume = async () => {
+    if (!userId) {
+      setTailorError('Analyze your profile first so your user ID is available.');
+      return;
+    }
+    if (tailorResult) {
+      setTailorResult(null);
+      return;
+    }
+    setTailoring(true);
+    setTailorError('');
+    try {
+      const res = await tailorResumeForJob({
+        user_id: Number(userId),
+        role: role || 'Software Engineer',
+        company: company || 'Target Company',
+        missing_skills: missingSkills,
+        why_fit: outreachPitch,
+      });
+      setTailorResult(res);
+    } catch (err) {
+      setTailorError(err?.message || 'Could not tailor resume for this role.');
+    } finally {
+      setTailoring(false);
+    }
+  };
 
   const matchBadgeStyle =
     match >= 85
@@ -72,11 +130,7 @@ export default function JobCard({ job, compact = false }) {
                     {workMode}
                   </span>
                 )}
-                {salary && (
-                  <span className="font-mono text-slate-300">
-                    {salary}
-                  </span>
-                )}
+                {salary && <span className="font-mono text-slate-300">{salary}</span>}
               </div>
             </div>
           </div>
@@ -99,9 +153,19 @@ export default function JobCard({ job, compact = false }) {
 
         {outreachPitch && (
           <div className="rounded-xl border border-honey-300/15 bg-honey-300/[0.04] p-3">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-honey-200">
-              AI outreach pitch
-            </p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-honey-200">
+                AI outreach pitch
+              </p>
+              <button
+                type="button"
+                onClick={() => handleCopy(outreachPitch, 'pitch')}
+                className="inline-flex items-center gap-1 rounded-md border border-honey-300/20 bg-black/30 px-2 py-0.5 text-[10px] font-medium text-honey-100 hover:bg-honey-300/10"
+              >
+                {copiedKey === 'pitch' ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                {copiedKey === 'pitch' ? 'Copied' : 'Copy'}
+              </button>
+            </div>
             <p className="mt-1 text-xs leading-relaxed text-slate-300">{outreachPitch}</p>
           </div>
         )}
@@ -148,12 +212,65 @@ export default function JobCard({ job, compact = false }) {
             </div>
           </div>
         )}
+
+        {tailorError && (
+          <p className="text-xs text-rose-300">{tailorError}</p>
+        )}
+
+        {tailorResult && (
+          <div className="space-y-3 rounded-xl border border-plum-300/30 bg-plum-950/40 p-3.5">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-honey-200">
+                Tailored Resume Bullets for {company}
+              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  handleCopy((tailorResult.tailored_bullets || []).join('\n• '), 'bullets')
+                }
+                className="inline-flex items-center gap-1 rounded-md border border-honey-300/25 bg-black/35 px-2 py-0.5 text-[10px] font-medium text-honey-100 hover:bg-honey-300/10"
+              >
+                {copiedKey === 'bullets' ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                {copiedKey === 'bullets' ? 'Copied All' : 'Copy Bullets'}
+              </button>
+            </div>
+            <ul className="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-slate-200">
+              {(tailorResult.tailored_bullets || []).map((bullet, i) => (
+                <li key={i}>{bullet}</li>
+              ))}
+            </ul>
+            {tailorResult.cold_outreach_dm && (
+              <div className="border-t border-white/10 pt-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                    Recruiter Cold DM
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleCopy(tailorResult.cold_outreach_dm, 'dm')}
+                    className="inline-flex items-center gap-1 text-[10px] text-honey-200 hover:underline"
+                  >
+                    {copiedKey === 'dm' ? 'Copied!' : 'Copy DM'}
+                  </button>
+                </div>
+                <p className="mt-1 text-xs italic text-slate-300">{tailorResult.cold_outreach_dm}</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-white/[0.08] pt-3">
-        {postedAt && (
-          <span className="text-xs text-slate-400">{postedAt}</span>
-        )}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.08] pt-3">
+        <button
+          type="button"
+          onClick={handleTailorResume}
+          disabled={tailoring}
+          className="inline-flex items-center gap-1.5 rounded-xl border border-honey-300/30 bg-honey-300/10 px-3 py-2 text-xs font-semibold text-honey-100 transition hover:bg-honey-300/20 disabled:opacity-50"
+        >
+          {tailoring ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileText className="h-3.5 w-3.5" />}
+          {tailoring ? 'Tailoring...' : tailorResult ? 'Hide Tailored Resume' : 'Tailor Resume'}
+        </button>
+
         {typeof applyUrl === 'string' && /^https?:\/\//i.test(applyUrl) ? (
           <a
             href={applyUrl}
@@ -164,7 +281,7 @@ export default function JobCard({ job, compact = false }) {
             Open application <ExternalLink className="h-4 w-4" />
           </a>
         ) : (
-          <span className="text-xs text-slate-500">Apply link not returned</span>
+          <span className="text-xs text-slate-500">{postedAt || 'Apply link not returned'}</span>
         )}
       </div>
     </GlassCard>

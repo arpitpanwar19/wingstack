@@ -506,3 +506,51 @@ def create_sprint_roadmap(payload: RoadmapRequest):
         )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
+
+# 7. JOB-SPECIFIC RESUME TAILOR & OUTREACH GENERATOR
+class TailorRequest(BaseModel):
+    user_id: int
+    role: str
+    company: str
+    missing_skills: list[str] = []
+    why_fit: str = ""
+
+
+@app.post("/api/resume/tailor")
+def tailor_resume_for_job(payload: TailorRequest):
+    conn = get_db()
+    user = conn.execute("SELECT * FROM users WHERE id = ?", (payload.user_id,)).fetchone()
+    conn.close()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    try:
+        verified_skills = json.loads(user["verified_skills"] or "[]")
+    except Exception:
+        verified_skills = ["Python", "C++", "FastAPI", "Git"]
+
+    system_prompt = (
+        "You are an expert FAANG technical resume writer and career coach. "
+        "Generate 3 quantified STAR-format resume bullets tailored specifically to the target job "
+        "and a crisp 2-sentence cold recruiter outreach message. "
+        "Return ONLY valid JSON with keys: "
+        '"tailored_bullets" (list of 3 strings) and "cold_outreach_dm" (string).'
+    )
+    user_prompt = json.dumps({
+        "candidate_name": user["name"],
+        "verified_skills": verified_skills,
+        "summary": user["summary"],
+        "target_job_role": payload.role,
+        "target_company": payload.company,
+        "missing_skills_to_bridge": payload.missing_skills,
+        "fit_context": payload.why_fit,
+    })
+
+    try:
+        result = ask_groq_json(system_prompt, user_prompt)
+        return {
+            "tailored_bullets": result.get("tailored_bullets", []),
+            "cold_outreach_dm": result.get("cold_outreach_dm", ""),
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
