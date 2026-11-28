@@ -49,6 +49,7 @@ export default function CareerScoutPage() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [workMode, setWorkMode] = useState('All');
+  const [sourceTier, setSourceTier] = useState('All');
   const [experienceLevel, setExperienceLevel] = useState('All');
   const [minMatch, setMinMatch] = useState(0);
   const [onlyZeroMissing, setOnlyZeroMissing] = useState(false);
@@ -81,6 +82,10 @@ export default function CareerScoutPage() {
         const matchPct = getMatchScore(job);
         if (minMatch > 0 && (matchPct === null || matchPct < minMatch)) return false;
         const jobWorkMode = job.workMode || job.work_mode || job.work_type || '';
+        const jobSourceTier = job.source_tier || job.platform || '';
+        if (sourceTier !== 'All' && !jobSourceTier.toLowerCase().includes(sourceTier.toLowerCase())) {
+          return false;
+        }
         if (workMode !== 'All' && jobWorkMode.toLowerCase() !== workMode.toLowerCase()) {
           return false;
         }
@@ -118,6 +123,7 @@ export default function CareerScoutPage() {
   const resetFilters = () => {
     setSearchQuery('');
     setWorkMode('All');
+    setSourceTier('All');
     setExperienceLevel('All');
     setMinMatch(0);
     setOnlyZeroMissing(false);
@@ -197,7 +203,20 @@ export default function CareerScoutPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 border-t border-honey-100/10 pt-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 border-t border-honey-100/10 pt-5 sm:grid-cols-2 lg:grid-cols-5">
+            <GlassInput
+              label="Source Tier (70+ Boards)"
+              as="select"
+              icon={BriefcaseBusiness}
+              value={sourceTier}
+              onChange={(e) => setSourceTier(e.target.value)}
+            >
+              <option value="All">All Sources</option>
+              <option value="Direct ATS">Direct ATS (Greenhouse/Lever/Ashby)</option>
+              <option value="Custom Portal">Custom Career Portals (Big Tech/Unicorns)</option>
+              <option value="Remote API">Remote Startup APIs</option>
+              <option value="Hackathon">Hackathons & Challenges</option>
+            </GlassInput>
             <GlassInput
               label="Work Mode"
               as="select"
