@@ -136,8 +136,21 @@ def fetch_codeforces_stats(handle: str) -> dict:
 
 
 def ask_groq_json(system_prompt: str, user_prompt: str) -> dict:
+    models_resp = client.models.list()
+    all_ids = [m.id for m in models_resp.data]
+    allowed_prefixes = ("llama-", "meta-llama/", "gemma", "mixtral", "openai/gpt-oss")
+    blocked = ("guard", "whisper", "tts")
+    available = [m for m in all_ids if m.lower().startswith(allowed_prefixes) and not any(b in m.lower() for b in blocked)]
+    preferred = [
+        "openai/gpt-oss-20b",
+        "openai/gpt-oss-120b",
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant",
+        "allam-2-7b",
+    ]
+    chosen_model = next((m for m in preferred if m in available), available[0] if available else "openai/gpt-oss-20b")
     completion = client.chat.completions.create(
-        model=GROQ_MODEL,
+        model=chosen_model,
         messages=[
             {"role": "system", "content": system_prompt + " Always respond strictly with valid JSON."},
             {"role": "user", "content": user_prompt}
