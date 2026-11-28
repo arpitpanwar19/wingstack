@@ -3,9 +3,6 @@ import re
 import time
 import json
 import asyncio
-import xml.etree.ElementTree as ET
-from pathlib import Path
-from urllib.parse import urlparse
 import httpx
 from groq import AsyncGroq
 from dotenv import load_dotenv
@@ -16,18 +13,12 @@ load_dotenv(".env")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 
-BOARDS_PATH = Path(__file__).resolve().parent.parent / "data" / "company_boards.json"
 _ATS_CACHE: dict = {"timestamp": 0.0, "jobs": []}
 CACHE_TTL_SECONDS = 1800
 
+DIRECT_BOARDS = [{'company': 'Razorpay', 'hq_or_india_hubs': ['Bengaluru', 'Remote'], 'category': 'Indian Unicorn', 'ats_type': 'greenhouse', 'slug': 'razorpaysoftwareprivatelimited', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/razorpaysoftwareprivatelimited/jobs?content=true', 'careers_page': 'https://razorpay.com/jobs/'}, {'company': 'CRED', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Indian Unicorn', 'ats_type': 'lever', 'slug': 'cred', 'fetch_method': 'http_get_json', 'api_url': 'https://api.lever.co/v0/postings/cred?mode=json', 'careers_page': 'https://careers.cred.club/'}, {'company': 'Postman', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Indian Unicorn', 'ats_type': 'greenhouse', 'slug': 'postman', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/postman/jobs?content=true', 'careers_page': 'https://www.postman.com/company/careers/'}, {'company': 'BrowserStack', 'hq_or_india_hubs': ['Mumbai', 'Remote'], 'category': 'Indian Unicorn', 'ats_type': 'greenhouse', 'slug': 'browserstack', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/browserstack/jobs?content=true', 'careers_page': 'https://www.browserstack.com/careers'}, {'company': 'Groww', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Indian Unicorn', 'ats_type': 'greenhouse', 'slug': 'groww', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/groww/jobs?content=true', 'careers_page': 'https://groww.in/careers'}, {'company': 'MoEngage', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Indian Startup', 'ats_type': 'greenhouse', 'slug': 'moengage', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/moengage/jobs?content=true', 'careers_page': 'https://www.moengage.com/careers/'}, {'company': 'Stripe', 'hq_or_india_hubs': ['Bengaluru', 'Remote'], 'category': 'Global Fintech', 'ats_type': 'greenhouse', 'slug': 'stripe', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/stripe/jobs?content=true', 'careers_page': 'https://stripe.com/jobs'}, {'company': 'Airbnb', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Global Product', 'ats_type': 'greenhouse', 'slug': 'airbnb', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/airbnb/jobs?content=true', 'careers_page': 'https://careers.airbnb.com/'}, {'company': 'Coinbase', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Fintech', 'ats_type': 'greenhouse', 'slug': 'coinbase', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/coinbase/jobs?content=true', 'careers_page': 'https://www.coinbase.com/careers'}, {'company': 'Databricks', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Global Data/AI', 'ats_type': 'greenhouse', 'slug': 'databricks', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/databricks/jobs?content=true', 'careers_page': 'https://www.databricks.com/company/careers'}, {'company': 'Cloudflare', 'hq_or_india_hubs': ['Bengaluru', 'Remote-India'], 'category': 'Global Infrastructure', 'ats_type': 'greenhouse', 'slug': 'cloudflare', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs?content=true', 'careers_page': 'https://www.cloudflare.com/careers/'}, {'company': 'GitLab', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global DevTools', 'ats_type': 'greenhouse', 'slug': 'gitlab', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/gitlab/jobs?content=true', 'careers_page': 'https://about.gitlab.com/jobs/'}, {'company': 'Elastic', 'hq_or_india_hubs': ['Remote-India', 'Bengaluru'], 'category': 'Global Data/Search', 'ats_type': 'greenhouse', 'slug': 'elastic', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/elastic/jobs?content=true', 'careers_page': 'https://www.elastic.co/about/careers/'}, {'company': 'MongoDB', 'hq_or_india_hubs': ['Gurugram', 'Bengaluru', 'Remote-India'], 'category': 'Global Database', 'ats_type': 'greenhouse', 'slug': 'mongodb', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/mongodb/jobs?content=true', 'careers_page': 'https://www.mongodb.com/company/careers'}, {'company': 'Twilio', 'hq_or_india_hubs': ['Bengaluru', 'Remote-India'], 'category': 'Global CPaaS', 'ats_type': 'greenhouse', 'slug': 'twilio', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/twilio/jobs?content=true', 'careers_page': 'https://www.twilio.com/en-us/company/jobs'}, {'company': 'Okta', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Global Security', 'ats_type': 'greenhouse', 'slug': 'okta', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/okta/jobs?content=true', 'careers_page': 'https://www.okta.com/company/careers/'}, {'company': 'Zscaler', 'hq_or_india_hubs': ['Bengaluru', 'Pune'], 'category': 'Global Security', 'ats_type': 'greenhouse', 'slug': 'zscaler', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/zscaler/jobs?content=true', 'careers_page': 'https://www.zscaler.com/careers'}, {'company': 'Figma', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Design/Product', 'ats_type': 'greenhouse', 'slug': 'figma', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/figma/jobs?content=true', 'careers_page': 'https://www.figma.com/careers/'}, {'company': 'Vercel', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global DevTools', 'ats_type': 'greenhouse', 'slug': 'vercel', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/vercel/jobs?content=true', 'careers_page': 'https://vercel.com/careers'}, {'company': 'Anthropic', 'hq_or_india_hubs': ['Bengaluru', 'Remote-India'], 'category': 'Global AI', 'ats_type': 'greenhouse', 'slug': 'anthropic', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/anthropic/jobs?content=true', 'careers_page': 'https://www.anthropic.com/careers'}, {'company': 'Scale AI', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global AI', 'ats_type': 'greenhouse', 'slug': 'scaleai', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/scaleai/jobs?content=true', 'careers_page': 'https://scale.com/careers'}, {'company': 'Reddit', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Global Product', 'ats_type': 'greenhouse', 'slug': 'reddit', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/reddit/jobs?content=true', 'careers_page': 'https://redditinc.com/careers'}, {'company': 'Robinhood', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Global Fintech', 'ats_type': 'greenhouse', 'slug': 'robinhood', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/robinhood/jobs?content=true', 'careers_page': 'https://careers.robinhood.com/'}, {'company': 'Notion', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'ashby', 'slug': 'notion', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/notion?includeCompensation=true', 'careers_page': 'https://www.notion.com/careers'}, {'company': 'Linear', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'ashby', 'slug': 'linear', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/linear?includeCompensation=true', 'careers_page': 'https://linear.app/careers'}, {'company': 'Supabase', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global DevTools', 'ats_type': 'ashby', 'slug': 'supabase', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/supabase?includeCompensation=true', 'careers_page': 'https://supabase.com/careers'}, {'company': 'OpenAI', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global AI', 'ats_type': 'ashby', 'slug': 'openai', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=true', 'careers_page': 'https://openai.com/careers/'}, {'company': 'InMobi', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Indian Unicorn', 'ats_type': 'greenhouse', 'slug': 'inmobi', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/inmobi/jobs?content=true', 'careers_page': 'https://www.inmobi.com/company/careers'}, {'company': 'Datadog', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Observability', 'ats_type': 'greenhouse', 'slug': 'datadog', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/datadog/jobs?content=true', 'careers_page': 'https://careers.datadoghq.com/'}, {'company': 'Pinterest', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'greenhouse', 'slug': 'pinterest', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/pinterest/jobs?content=true', 'careers_page': 'https://www.pinterestcareers.com/'}, {'company': 'Dropbox', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'greenhouse', 'slug': 'dropbox', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/dropbox/jobs?content=true', 'careers_page': 'https://jobs.dropbox.com/'}, {'company': 'Lyft', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'greenhouse', 'slug': 'lyft', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/lyft/jobs?content=true', 'careers_page': 'https://www.lyft.com/careers'}, {'company': 'Asana', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global SaaS', 'ats_type': 'greenhouse', 'slug': 'asana', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/asana/jobs?content=true', 'careers_page': 'https://asana.com/jobs'}, {'company': 'PagerDuty', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global DevOps', 'ats_type': 'greenhouse', 'slug': 'pagerduty', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/pagerduty/jobs?content=true', 'careers_page': 'https://www.pagerduty.com/careers/'}, {'company': 'Fivetran', 'hq_or_india_hubs': ['Bengaluru', 'Remote-India'], 'category': 'Global Data', 'ats_type': 'greenhouse', 'slug': 'fivetran', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/fivetran/jobs?content=true', 'careers_page': 'https://www.fivetran.com/careers'}, {'company': 'Samsara', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global IoT', 'ats_type': 'greenhouse', 'slug': 'samsara', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/samsara/jobs?content=true', 'careers_page': 'https://www.samsara.com/company/careers'}, {'company': 'Discord', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'greenhouse', 'slug': 'discord', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/discord/jobs?content=true', 'careers_page': 'https://discord.com/careers'}, {'company': 'Duolingo', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'greenhouse', 'slug': 'duolingo', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/duolingo/jobs?content=true', 'careers_page': 'https://careers.duolingo.com/'}, {'company': 'Airtable', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global SaaS', 'ats_type': 'greenhouse', 'slug': 'airtable', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/airtable/jobs?content=true', 'careers_page': 'https://airtable.com/careers'}, {'company': 'Grammarly', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global AI Product', 'ats_type': 'greenhouse', 'slug': 'grammarly', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/grammarly/jobs?content=true', 'careers_page': 'https://www.grammarly.com/jobs'}, {'company': 'Intercom', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global SaaS', 'ats_type': 'greenhouse', 'slug': 'intercom', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/intercom/jobs?content=true', 'careers_page': 'https://www.intercom.com/careers'}, {'company': 'Glean', 'hq_or_india_hubs': ['Bengaluru'], 'category': 'Global AI', 'ats_type': 'greenhouse', 'slug': 'gleanwork', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/gleanwork/jobs?content=true', 'careers_page': 'https://www.glean.com/careers'}, {'company': 'Instacart', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'greenhouse', 'slug': 'instacart', 'fetch_method': 'http_get_json', 'api_url': 'https://boards-api.greenhouse.io/v1/boards/instacart/jobs?content=true', 'careers_page': 'https://careers.instacart.com/'}, {'company': 'Plaid', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Fintech', 'ats_type': 'lever', 'slug': 'plaid', 'fetch_method': 'http_get_json', 'api_url': 'https://api.lever.co/v0/postings/plaid?mode=json', 'careers_page': 'https://plaid.com/careers/'}, {'company': 'Palantir', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Data/AI', 'ats_type': 'lever', 'slug': 'palantir', 'fetch_method': 'http_get_json', 'api_url': 'https://api.lever.co/v0/postings/palantir?mode=json', 'careers_page': 'https://www.palantir.com/careers/'}, {'company': 'Spotify', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Product', 'ats_type': 'lever', 'slug': 'spotify', 'fetch_method': 'http_get_json', 'api_url': 'https://api.lever.co/v0/postings/spotify?mode=json', 'careers_page': 'https://www.lifeatspotify.com/jobs'}, {'company': 'Ramp', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global Fintech', 'ats_type': 'ashby', 'slug': 'ramp', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/ramp?includeCompensation=true', 'careers_page': 'https://ramp.com/careers'}, {'company': 'Deel', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global HR Tech', 'ats_type': 'ashby', 'slug': 'deel', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/deel?includeCompensation=true', 'careers_page': 'https://www.deel.com/careers/'}, {'company': 'Perplexity', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global AI', 'ats_type': 'ashby', 'slug': 'perplexity', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/perplexity?includeCompensation=true', 'careers_page': 'https://www.perplexity.ai/hub/careers'}, {'company': 'Replit', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global DevTools', 'ats_type': 'ashby', 'slug': 'replit', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/replit?includeCompensation=true', 'careers_page': 'https://replit.com/careers'}, {'company': 'Retool', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global DevTools', 'ats_type': 'ashby', 'slug': 'retool', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/retool?includeCompensation=true', 'careers_page': 'https://retool.com/careers'}, {'company': 'Zapier', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global SaaS', 'ats_type': 'ashby', 'slug': 'zapier', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/zapier?includeCompensation=true', 'careers_page': 'https://zapier.com/jobs'}, {'company': 'Cohere', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global AI', 'ats_type': 'ashby', 'slug': 'cohere', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/cohere?includeCompensation=true', 'careers_page': 'https://cohere.com/careers'}, {'company': 'ElevenLabs', 'hq_or_india_hubs': ['Remote-India'], 'category': 'Global AI', 'ats_type': 'ashby', 'slug': 'elevenlabs', 'fetch_method': 'http_get_json', 'api_url': 'https://api.ashbyhq.com/posting-api/job-board/elevenlabs?includeCompensation=true', 'careers_page': 'https://elevenlabs.io/careers'}, {'company': 'NVIDIA', 'hq_or_india_hubs': ['Bengaluru', 'Hyderabad', 'Pune'], 'category': 'Global Semiconductor/AI', 'ats_type': 'workday', 'slug': 'nvidia', 'fetch_method': 'http_post_json', 'api_url': 'https://nvidia.wd5.myworkdayjobs.com/wday/cxs/nvidia/NVIDIAExternalCareerSite/jobs', 'careers_page': 'https://www.nvidia.com/en-in/about-nvidia/careers/'}, {'company': 'Adobe', 'hq_or_india_hubs': ['Bengaluru', 'Noida'], 'category': 'Global Big Tech', 'ats_type': 'workday', 'slug': 'adobe', 'fetch_method': 'http_post_json', 'api_url': 'https://adobe.wd5.myworkdayjobs.com/wday/cxs/adobe/external_experienced/jobs', 'careers_page': 'https://careers.adobe.com/'}, {'company': 'Salesforce', 'hq_or_india_hubs': ['Hyderabad', 'Bengaluru'], 'category': 'Global SaaS', 'ats_type': 'workday', 'slug': 'salesforce', 'fetch_method': 'http_post_json', 'api_url': 'https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/External_Career_Site/jobs', 'careers_page': 'https://careers.salesforce.com/'}, {'company': 'Walmart Global Tech', 'hq_or_india_hubs': ['Bengaluru', 'Chennai'], 'category': 'Global Retail Tech', 'ats_type': 'workday', 'slug': 'walmart', 'fetch_method': 'http_post_json', 'api_url': 'https://walmart.wd5.myworkdayjobs.com/wday/cxs/walmart/WalmartExternal/jobs', 'careers_page': 'https://careers.walmart.com/'}, {'company': 'Mastercard', 'hq_or_india_hubs': ['Pune', 'Gurugram'], 'category': 'Global Fintech', 'ats_type': 'workday', 'slug': 'mastercard', 'fetch_method': 'http_post_json', 'api_url': 'https://mastercard.wd1.myworkdayjobs.com/wday/cxs/mastercard/CorporateCareers/jobs', 'careers_page': 'https://careers.mastercard.com/'}, {'company': 'Intel', 'hq_or_india_hubs': ['Bengaluru', 'Hyderabad'], 'category': 'Global Semiconductor', 'ats_type': 'workday', 'slug': 'intel', 'fetch_method': 'http_post_json', 'api_url': 'https://intel.wd1.myworkdayjobs.com/wday/cxs/intel/External/jobs', 'careers_page': 'https://jobs.intel.com/'}, {'company': 'Dell Technologies', 'hq_or_india_hubs': ['Bengaluru', 'Hyderabad'], 'category': 'Global Hardware/Software MNC', 'ats_type': 'workday', 'slug': 'dell', 'fetch_method': 'http_post_json', 'api_url': 'https://dell.wd1.myworkdayjobs.com/wday/cxs/dell/External/jobs', 'careers_page': 'https://jobs.dell.com/'}]
 
-def _load_company_boards() -> list[dict]:
-    if not BOARDS_PATH.exists():
-        return []
-    try:
-        return json.loads(BOARDS_PATH.read_text(encoding="utf-8"))
-    except Exception:
-        return []
+CUSTOM_PORTALS = [{'company': 'Zepto', 'host': 'zeptonow.com'}, {'company': 'Meesho', 'host': 'meesho.io'}, {'company': 'Swiggy', 'host': 'careers.swiggy.com'}, {'company': 'Zomato', 'host': 'zomato.com'}, {'company': 'PhonePe', 'host': 'phonepe.com'}, {'company': 'Darwinbox', 'host': 'explore.darwinbox.com'}, {'company': 'Sprinto', 'host': 'sprinto.com'}, {'company': 'Hasura', 'host': 'hasura.io'}, {'company': 'Appsmith', 'host': 'appsmith.com'}, {'company': 'Setu', 'host': 'setu.co'}, {'company': 'Juspay', 'host': 'juspay.in'}, {'company': 'Slice', 'host': 'sliceit.com'}, {'company': 'Jupiter', 'host': 'jupiter.money'}, {'company': 'Chargebee', 'host': 'chargebee.com'}, {'company': 'Freshworks', 'host': 'freshworks.com'}, {'company': 'Zoho', 'host': 'zoho.com'}, {'company': 'Gupshup', 'host': 'gupshup.io'}, {'company': 'Innovaccer', 'host': 'innovaccer.com'}, {'company': 'CleverTap', 'host': 'clevertap.com'}, {'company': 'Hevo Data', 'host': 'hevodata.com'}, {'company': 'Scrut Automation', 'host': 'scrut.io'}, {'company': 'Kissflow', 'host': 'kissflow.com'}, {'company': 'Whatfix', 'host': 'whatfix.com'}, {'company': 'HighRadius', 'host': 'highradius.com'}, {'company': 'Flipkart', 'host': 'flipkartcareers.com'}, {'company': 'Paytm', 'host': 'paytm.com'}, {'company': 'Dream11', 'host': 'dreamsports.group'}, {'company': 'Rapido', 'host': 'rapido.bike'}, {'company': 'Lenskart', 'host': 'lenskart.com'}, {'company': 'Google', 'host': 'google.com'}, {'company': 'Microsoft', 'host': 'careers.microsoft.com'}, {'company': 'Amazon', 'host': 'amazon.jobs'}, {'company': 'Uber', 'host': 'uber.com'}, {'company': 'Atlassian', 'host': 'atlassian.com'}, {'company': 'Snowflake', 'host': 'careers.snowflake.com'}, {'company': 'Confluent', 'host': 'confluent.io'}, {'company': 'Palo Alto Networks', 'host': 'jobs.paloaltonetworks.com'}, {'company': 'Rubrik', 'host': 'rubrik.com'}, {'company': 'Nutanix', 'host': 'nutanix.com'}, {'company': 'Cohesity', 'host': 'cohesity.com'}, {'company': 'CrowdStrike', 'host': 'crowdstrike.com'}, {'company': 'ThoughtSpot', 'host': 'thoughtspot.com'}, {'company': 'Intuit', 'host': 'jobs.intuit.com'}, {'company': 'Khatabook', 'host': 'khatabook.com'}, {'company': 'Unacademy', 'host': 'unacademy.com'}, {'company': 'upGrad', 'host': 'upgrad.com'}, {'company': 'PhysicsWallah', 'host': 'pw.live'}, {'company': 'Delhivery', 'host': 'delhivery.com'}, {'company': 'Nykaa', 'host': 'nykaa.com'}, {'company': 'PolicyBazaar', 'host': 'policybazaar.com'}, {'company': 'Pine Labs', 'host': 'pinelabs.com'}, {'company': 'OYO', 'host': 'oyorooms.com'}, {'company': 'MakeMyTrip', 'host': 'careers.makemytrip.com'}, {'company': 'Ola', 'host': 'olacabs.com'}, {'company': 'Urban Company', 'host': 'careers.urbancompany.com'}, {'company': 'ShareChat', 'host': 'sharechat.com'}, {'company': 'CARS24', 'host': 'cars24.com'}, {'company': 'Spinny', 'host': 'spinny.com'}, {'company': 'Navi', 'host': 'navi.com'}, {'company': 'MobiKwik', 'host': 'mobikwik.com'}, {'company': 'Acko', 'host': 'acko.com'}, {'company': 'Zeta', 'host': 'zeta.tech'}, {'company': 'Zerodha', 'host': 'zerodha.com'}, {'company': 'Cult.fit', 'host': 'cult.fit'}, {'company': 'Sarvam AI', 'host': 'sarvam.ai'}, {'company': 'Fractal Analytics', 'host': 'fractal.ai'}, {'company': 'Tata Consultancy Services', 'host': 'tcs.com'}, {'company': 'Infosys', 'host': 'infosys.com'}, {'company': 'Wipro', 'host': 'careers.wipro.com'}, {'company': 'HCLTech', 'host': 'hcltech.com'}, {'company': 'Tech Mahindra', 'host': 'careers.techmahindra.com'}, {'company': 'LTIMindtree', 'host': 'ltimindtree.com'}, {'company': 'Mphasis', 'host': 'careers.mphasis.com'}, {'company': 'Deloitte', 'host': 'www2.deloitte.com'}, {'company': 'PwC', 'host': 'pwc.in'}, {'company': 'EY', 'host': 'ey.com'}, {'company': 'KPMG', 'host': 'kpmg.com'}, {'company': 'Accenture', 'host': 'accenture.com'}, {'company': 'Capgemini', 'host': 'capgemini.com'}, {'company': 'Cognizant', 'host': 'careers.cognizant.com'}, {'company': 'IBM', 'host': 'ibm.com'}, {'company': 'Netflix', 'host': 'jobs.netflix.com'}, {'company': 'Meta', 'host': 'metacareers.com'}, {'company': 'Apple', 'host': 'jobs.apple.com'}, {'company': 'Oracle', 'host': 'careers.oracle.com'}, {'company': 'SAP', 'host': 'jobs.sap.com'}, {'company': 'Cisco', 'host': 'jobs.cisco.com'}, {'company': 'Goldman Sachs', 'host': 'goldmansachs.com'}, {'company': 'JPMorgan Chase', 'host': 'careers.jpmorgan.com'}, {'company': 'Morgan Stanley', 'host': 'morganstanley.com'}, {'company': 'American Express', 'host': 'americanexpress.com'}, {'company': 'Visa', 'host': 'usa.visa.com'}, {'company': 'PayPal', 'host': 'paypal.eightfold.ai'}, {'company': 'Broadcom (VMware)', 'host': 'broadcom.wd1.myworkdayjobs.com'}]
 
 
 def _strip_html(raw: str) -> str:
@@ -37,79 +28,62 @@ def _strip_html(raw: str) -> str:
     return re.sub(r"\s+", " ", cleaned).strip()
 
 
-def _detect_platform(url: str) -> str:
-    u = url.lower()
-    if "greenhouse.io" in u:
-        return "Greenhouse ATS"
-    if "lever.co" in u:
-        return "Lever ATS"
-    if "ashbyhq.com" in u:
-        return "Ashby ATS"
-    if "workatastartup.com" in u:
-        return "YC Work at a Startup"
-    if "wellfound.com" in u or "angel.co" in u:
-        return "Wellfound"
-    if "unstop.com" in u:
-        return "Unstop"
-    if "cuvette.tech" in u:
-        return "Cuvette"
-    if "instahyre.com" in u:
-        return "Instahyre"
-    if "cutshort.io" in u:
-        return "Cutshort"
-    if "internshala.com" in u:
-        return "Internshala"
-    if "himalayas.app" in u:
-        return "Himalayas"
-    if "arbeitnow.com" in u:
-        return "Arbeitnow"
-    if "devpost.com" in u:
-        return "Devpost Hackathon"
-    if "remotive.com" in u:
-        return "Remotive"
-    return "Direct Career Portal"
-
-
-def _is_relevant_eng_role(title: str, location: str, hubs: list[str]) -> bool:
+def _is_valid_tech_role(title: str, location: str) -> bool:
     t = title.lower()
-    eng_terms = (
+    loc = (location or "").lower()
+
+    tech_terms = (
         "software", "engineer", "developer", "sde", "intern", "internship",
         "backend", "frontend", "full stack", "fullstack", "systems", "infrastructure",
-        "platform", "data", "ml", "ai", "security", "cloud", "devops", "site reliability",
-        "sre", "mobile", "android", "ios", "compiler", "distributed", "product engineer",
-        "new grad", "university", "graduate", "2026", "2027", "hackathon"
+        "platform", "data", "ml", "ai", "security", "cloud", "devops", "sre",
+        "mobile", "android", "ios", "distributed", "product engineer",
+        "new grad", "university", "graduate", "2026", "2027", "mts", "member of technical staff"
     )
-    if not any(k in t for k in eng_terms):
+    if not any(k in t for k in tech_terms):
         return False
 
-    senior_blocks = ("director", "vp ", "vice president", "head of", "principal", "distinguished", "fellow", "staff ", "manager")
-    if any(b in t for b in senior_blocks):
+    bad_titles = (
+        "director", "vp ", "vice president", "head of", "principal", "distinguished",
+        "fellow", "staff ", "manager", "tech lead", "team lead", "architect",
+        "wordpress", "shopify", "sales", "recruiter", "account executive", "marketing",
+        "senior ", "sr.", "sr ", "iii", "iv", "lead "
+    )
+    if any(b in t for b in bad_titles):
         return False
 
-    loc_lower = (location or "").lower()
-    india_or_remote_terms = (
+    blocked_regions = (
+        "united states", "usa", "americas", "latam", "canada", "emea", "europe",
+        "uk", "london", "san francisco", "new york", "seattle", "austin", "boston", "berlin", "dublin"
+    )
+    india_or_global = (
         "india", "bengaluru", "bangalore", "hyderabad", "pune", "mumbai", "noida",
-        "gurugram", "gurgaon", "chennai", "delhi", "remote", "anywhere", "apac", "global"
+        "gurugram", "gurgaon", "chennai", "delhi", "apac", "anywhere"
     )
-    if any(k in loc_lower for k in india_or_remote_terms):
-        return True
-    if not loc_lower and any("remote" in h.lower() or "india" in h.lower() for h in hubs):
-        return True
-    return False
+
+    if any(r in loc for r in blocked_regions) and not any(i in loc for i in india_or_global):
+        return False
+
+    return any(i in loc for i in india_or_global) or loc.strip() in ("remote", "global remote")
 
 
-async def _fetch_single_ats_board(client: httpx.AsyncClient, sem: asyncio.Semaphore, board: dict) -> list[dict]:
-    api_url = board.get("api_url")
-    ats_type = (board.get("ats_type") or "").lower()
-    company = board.get("company", "Company")
-    hubs = board.get("hq_or_india_hubs") or []
+async def _fetch_single_board(client: httpx.AsyncClient, sem: asyncio.Semaphore, board: dict) -> list[dict]:
+    api_url = board["api_url"]
+    ats_type = board["ats_type"]
+    company = board["company"]
     category = board.get("category") or "Tech Company"
-    if not api_url:
-        return []
+    careers_page = board.get("careers_page") or ""
 
     async with sem:
         try:
-            resp = await client.get(api_url, timeout=10.0)
+            if ats_type == "workday":
+                resp = await client.post(
+                    api_url,
+                    json={"limit": 20, "offset": 0, "searchText": "Software"},
+                    headers={"Content-Type": "application/json", "Accept": "application/json"},
+                    timeout=12.0,
+                )
+            else:
+                resp = await client.get(api_url, timeout=12.0)
             if resp.status_code != 200:
                 return []
             payload = resp.json()
@@ -120,16 +94,16 @@ async def _fetch_single_ats_board(client: httpx.AsyncClient, sem: asyncio.Semaph
     if ats_type == "greenhouse":
         for item in payload.get("jobs", []):
             title = item.get("title", "")
-            loc = (item.get("location") or {}).get("name") or ", ".join(hubs) or "India / Remote"
-            if not _is_relevant_eng_role(title, loc, hubs):
+            loc = (item.get("location") or {}).get("name") or ""
+            if not _is_valid_tech_role(title, loc):
                 continue
             jobs.append({
                 "title": title[:100],
                 "company": company,
-                "location": loc[:80],
+                "location": loc[:80] or "Bengaluru, India",
                 "platform": f"Greenhouse ? {category}",
                 "source_tier": "Direct ATS",
-                "apply_url": item.get("absolute_url") or board.get("careers_page", ""),
+                "apply_url": item.get("absolute_url") or careers_page,
                 "posted_at": (item.get("updated_at") or "")[:10] or "Active (2026)",
                 "salary_range": "",
                 "description": _strip_html(item.get("content", ""))[:950],
@@ -138,9 +112,8 @@ async def _fetch_single_ats_board(client: httpx.AsyncClient, sem: asyncio.Semaph
         listings = payload if isinstance(payload, list) else payload.get("data", [])
         for item in listings:
             title = item.get("text", "")
-            cats = item.get("categories") or {}
-            loc = cats.get("location") or ", ".join(hubs) or "Bengaluru"
-            if not _is_relevant_eng_role(title, loc, hubs):
+            loc = (item.get("categories") or {}).get("location") or "Bengaluru, India"
+            if not _is_valid_tech_role(title, loc):
                 continue
             jobs.append({
                 "title": title[:100],
@@ -148,7 +121,7 @@ async def _fetch_single_ats_board(client: httpx.AsyncClient, sem: asyncio.Semaph
                 "location": loc[:80],
                 "platform": f"Lever ? {category}",
                 "source_tier": "Direct ATS",
-                "apply_url": item.get("hostedUrl") or item.get("applyUrl") or board.get("careers_page", ""),
+                "apply_url": item.get("hostedUrl") or item.get("applyUrl") or careers_page,
                 "posted_at": "Active (2026)",
                 "salary_range": "",
                 "description": _strip_html(item.get("descriptionPlain") or item.get("description", ""))[:950],
@@ -156,74 +129,79 @@ async def _fetch_single_ats_board(client: httpx.AsyncClient, sem: asyncio.Semaph
     elif ats_type == "ashby":
         for item in payload.get("jobs", []):
             title = item.get("title", "")
-            loc = item.get("location") or ", ".join(hubs) or "Remote"
-            if not _is_relevant_eng_role(title, loc, hubs):
+            loc = item.get("location") or ""
+            if not _is_valid_tech_role(title, loc):
                 continue
-            comp = item.get("compensationTierSummary") or ""
             jobs.append({
                 "title": title[:100],
                 "company": company,
-                "location": loc[:80],
+                "location": loc[:80] or "India / Remote",
                 "platform": f"Ashby ? {category}",
                 "source_tier": "Direct ATS",
-                "apply_url": item.get("jobUrl") or item.get("applyUrl") or board.get("careers_page", ""),
+                "apply_url": item.get("jobUrl") or item.get("applyUrl") or careers_page,
                 "posted_at": (item.get("publishedAt") or "")[:10] or "Active (2026)",
-                "salary_range": comp,
+                "salary_range": item.get("compensationTierSummary") or "",
                 "description": _strip_html(item.get("descriptionPlain") or item.get("descriptionHtml", ""))[:950],
+            })
+    elif ats_type == "workday":
+        base_wd = api_url.split("/wday/")[0]
+        for item in payload.get("jobPostings", []):
+            title = item.get("title", "")
+            loc = item.get("locationsText") or ""
+            if not _is_valid_tech_role(title, loc):
+                continue
+            ext_path = item.get("externalPath") or ""
+            apply_link = f"{base_wd}/en-US{ext_path}" if ext_path else careers_page
+            jobs.append({
+                "title": title[:100],
+                "company": company,
+                "location": loc[:80] or "Bengaluru / Hyderabad, India",
+                "platform": f"Workday ? {category}",
+                "source_tier": "Direct ATS",
+                "apply_url": apply_link,
+                "posted_at": item.get("postedOn") or "Active (2026)",
+                "salary_range": "",
+                "description": f"{title} at {company} ({loc})",
             })
     return jobs
 
 
-async def _fetch_all_direct_ats(client: httpx.AsyncClient, boards: list[dict]) -> list[dict]:
+async def _fetch_all_direct_ats(client: httpx.AsyncClient) -> list[dict]:
     now = time.time()
     if _ATS_CACHE["jobs"] and (now - _ATS_CACHE["timestamp"]) < CACHE_TTL_SECONDS:
         return list(_ATS_CACHE["jobs"])
 
-    http_boards = [b for b in boards if b.get("fetch_method") == "http_get_json" and b.get("api_url")]
-    sem = asyncio.Semaphore(12)
-    nested = await asyncio.gather(*[_fetch_single_ats_board(client, sem, b) for b in http_boards])
-    harvested = [job for group in nested for job in group]
+    sem = asyncio.Semaphore(16)
+    nested = await asyncio.gather(*[_fetch_single_board(client, sem, b) for b in DIRECT_BOARDS])
+    harvested = [j for group in nested for j in group]
     if harvested:
         _ATS_CACHE["timestamp"] = now
         _ATS_CACHE["jobs"] = harvested
     return harvested
 
 
-async def _fetch_custom_portals_via_tavily(
-    client: httpx.AsyncClient,
-    boards: list[dict],
-    target_role: str,
-    top_skills: list[str],
-    seniority_query: str,
-) -> list[dict]:
+async def _fetch_custom_portals_via_tavily(client: httpx.AsyncClient, flat_skills: list[str]) -> list[dict]:
     if not TAVILY_API_KEY:
         return []
 
-    custom_boards = [b for b in boards if b.get("fetch_method") == "custom_or_headless" and b.get("careers_page")]
-    domains = []
-    domain_to_company = {}
-    for b in custom_boards:
-        host = urlparse(b["careers_page"]).netloc.lower().replace("www.", "")
-        if host:
-            domains.append(host)
-            domain_to_company[host] = b["company"]
+    skills_str = " ".join(flat_skills[:3]) if flat_skills else "Python C++ Backend"
+    unique_hosts = list({p["host"]: p["company"] for p in CUSTOM_PORTALS}.items())
+    chunk_size = max(1, (len(unique_hosts) + 2) // 3)
+    batches = [unique_hosts[i:i + chunk_size] for i in range(0, len(unique_hosts), chunk_size)]
 
-    mid = max(1, len(domains) // 2)
-    batches = [domains[:mid], domains[mid:]]
-    skills_str = " ".join(top_skills[:3]) if top_skills else "Python C++ SQL"
-
-    async def _query_batch(domain_slice: list[str]) -> list[dict]:
-        if not domain_slice:
+    async def _query(host_pairs: list[tuple[str, str]]) -> list[dict]:
+        if not host_pairs:
             return []
+        domains = [h for h, _ in host_pairs]
         try:
             resp = await client.post(
                 "https://api.tavily.com/search",
                 json={
                     "api_key": TAVILY_API_KEY,
-                    "query": f'("{target_role}" OR "Software Engineer" OR "Intern") {skills_str} ({seniority_query})',
-                    "include_domains": domain_slice,
+                    "query": f'("Software Engineer" OR "SDE" OR "Intern") {skills_str} India (intern OR 2026 OR 2027 OR SDE-1)',
+                    "include_domains": domains,
                     "search_depth": "advanced",
-                    "max_results": 8,
+                    "max_results": 7,
                     "days": 30,
                     "include_answer": False,
                 },
@@ -237,13 +215,14 @@ async def _fetch_custom_portals_via_tavily(
                 title = item.get("title", "").split("|")[0].split(" - ")[0].strip()
                 if not url or not title:
                     continue
-                host = urlparse(url).netloc.lower().replace("www.", "")
-                comp = next((c for d, c in domain_to_company.items() if d in host), _detect_platform(url))
+                if any(bad in title.lower() for bad in ("director", "staff", "principal", "manager", "lead", "senior", "careers at", "jobs at")):
+                    continue
+                comp = next((c for h, c in host_pairs if h in url.lower()), "Tech Company")
                 out.append({
                     "title": title[:95],
                     "company": comp,
-                    "location": "India / Hybrid",
-                    "platform": "Custom Career Portal",
+                    "location": "Bengaluru / Hyderabad, India",
+                    "platform": "Direct Career Portal",
                     "source_tier": "Custom Portal",
                     "apply_url": url,
                     "posted_at": item.get("published_date") or "Active (2026)",
@@ -254,153 +233,27 @@ async def _fetch_custom_portals_via_tavily(
         except Exception:
             return []
 
-    res = await asyncio.gather(*[_query_batch(b) for b in batches])
-    return [j for grp in res for j in grp]
-
-
-async def _fetch_public_remote_apis(client: httpx.AsyncClient, top_skills: list[str]) -> list[dict]:
-    skill_q = top_skills[0] if top_skills else "Python"
-
-    async def _himalayas() -> list[dict]:
-        try:
-            r = await client.get("https://himalayas.app/jobs/api?limit=12", timeout=10.0)
-            if r.status_code != 200:
-                return []
-            out = []
-            for j in r.json().get("jobs", []):
-                title = j.get("title", "")
-                if not _is_relevant_eng_role(title, "Remote", ["Remote"]):
-                    continue
-                min_s, max_s = j.get("minSalary"), j.get("maxSalary")
-                sal = f"${int(min_s/1000)}k-${int(max_s/1000)}k" if min_s and max_s else ""
-                out.append({
-                    "title": title[:95],
-                    "company": j.get("companyName", "Remote Startup"),
-                    "location": "Remote (Global)",
-                    "platform": "Himalayas",
-                    "source_tier": "Remote API",
-                    "apply_url": j.get("applicationLink") or j.get("guid", ""),
-                    "posted_at": "Active (2026)",
-                    "salary_range": sal,
-                    "description": _strip_html(j.get("description", ""))[:850],
-                })
-            return out
-        except Exception:
-            return []
-
-    async def _arbeitnow() -> list[dict]:
-        try:
-            r = await client.get("https://www.arbeitnow.com/api/job-board-api", timeout=10.0)
-            if r.status_code != 200:
-                return []
-            out = []
-            for j in r.json().get("data", [])[:25]:
-                title = j.get("title", "")
-                if not j.get("remote") or not _is_relevant_eng_role(title, "Remote", ["Remote"]):
-                    continue
-                out.append({
-                    "title": title[:95],
-                    "company": j.get("company_name", "Tech Company"),
-                    "location": j.get("location") or "Remote",
-                    "platform": "Arbeitnow",
-                    "source_tier": "Remote API",
-                    "apply_url": j.get("url", ""),
-                    "posted_at": "Active (2026)",
-                    "salary_range": "",
-                    "description": _strip_html(j.get("description", ""))[:850],
-                })
-            return out[:6]
-        except Exception:
-            return []
-
-    async def _remotive() -> list[dict]:
-        try:
-            r = await client.get(
-                "https://remotive.com/api/remote-jobs",
-                params={"category": "software-dev", "search": skill_q, "limit": 5},
-                timeout=10.0,
-            )
-            if r.status_code != 200:
-                return []
-            return [
-                {
-                    "title": j.get("title", "Software Engineer")[:95],
-                    "company": j.get("company_name", "Tech Company"),
-                    "location": j.get("candidate_required_location", "Remote"),
-                    "platform": "Remotive",
-                    "source_tier": "Remote API",
-                    "apply_url": j.get("url", ""),
-                    "posted_at": (j.get("publication_date") or "")[:10] or "Active",
-                    "salary_range": j.get("salary") or "",
-                    "description": _strip_html(j.get("description", ""))[:850],
-                }
-                for j in r.json().get("jobs", [])[:5]
-            ]
-        except Exception:
-            return []
-
-    async def _devpost_hackathons() -> list[dict]:
-        try:
-            r = await client.get("https://devpost.com/hackathons.rss", timeout=10.0)
-            if r.status_code != 200:
-                return []
-            root = ET.fromstring(r.text)
-            out = []
-            for item in root.findall(".//item")[:4]:
-                title = (item.findtext("title") or "").strip()
-                link = (item.findtext("link") or "").strip()
-                desc = _strip_html(item.findtext("description") or "")
-                if title and link:
-                    out.append({
-                        "title": f"Hackathon: {title}"[:95],
-                        "company": "Devpost Global",
-                        "location": "Online / Global",
-                        "platform": "Devpost Hackathon",
-                        "source_tier": "Hackathon",
-                        "apply_url": link,
-                        "posted_at": "Open Registration",
-                        "salary_range": "Prize Pool / Hiring",
-                        "description": desc[:850],
-                    })
-            return out
-        except Exception:
-            return []
-
-    groups = await asyncio.gather(_himalayas(), _arbeitnow(), _remotive(), _devpost_hackathons())
+    groups = await asyncio.gather(*[_query(b) for b in batches])
     return [j for g in groups for j in g]
 
 
 def _local_pre_score(job: dict, flat_skills: list[str], target_role: str) -> int:
     text = f"{job.get('title', '')} {job.get('description', '')} {job.get('location', '')}".lower()
-    score = 0
-    if job.get("source_tier") == "Direct ATS":
-        score += 25
-    elif job.get("source_tier") == "Custom Portal":
-        score += 18
-    for kw in ("intern", "2026", "2027", "sde-1", "sde 1", "new grad", "graduate", "junior", "associate"):
+    score = 35 if job.get("source_tier") == "Direct ATS" else 22
+    for kw in ("intern", "internship", "2026", "2027", "sde-1", "sde 1", "new grad", "university", "graduate", "junior", "associate", "software engineer i", "sde i"):
         if kw in job.get("title", "").lower():
-            score += 15
-    for loc in ("india", "bengaluru", "bangalore", "noida", "gurugram", "hyderabad", "pune", "remote"):
+            score += 22
+    for loc in ("india", "bengaluru", "bangalore", "hyderabad", "pune", "noida", "gurugram", "chennai", "mumbai"):
         if loc in text:
-            score += 10
+            score += 15
             break
     for sk in flat_skills[:12]:
         if sk.lower() in text:
             score += 6
-    for word in target_role.lower().split():
-        if len(word) > 2 and word in job.get("title", "").lower():
-            score += 8
     return score
 
 
-def _infer_seniority_keywords(target_role: str, coding_stats: dict, resume_summary: str) -> tuple[str, str]:
-    combined_text = f"{target_role} {resume_summary}".lower()
-    if any(k in combined_text for k in ("intern", "internship", "student", "undergrad", "2nd year", "3rd year", "fresher", "new grad", "0-1", "entry")):
-        return "intern OR fresher OR SDE-1 OR 2026 OR 2027", "Prioritize Internships, 2026/2027 New Grad, SDE-1, and Entry-Level roles. Exclude Senior/Staff/Lead/Manager roles."
-    return "SDE-1 OR associate OR junior OR software engineer", "Prefer roles matching the candidate's actual experience level; penalize roles requiring 5+ years."
-
-
-async def _score_jobs_with_groq(user_profile: dict, candidate_jobs: list[dict], seniority_rule: str) -> list[dict]:
+async def _score_jobs_with_groq(user_profile: dict, candidate_jobs: list[dict], flat_skills: list[str]) -> list[dict]:
     if not candidate_jobs:
         return []
     if not GROQ_API_KEY:
@@ -419,35 +272,34 @@ async def _score_jobs_with_groq(user_profile: dict, candidate_jobs: list[dict], 
             "company": j["company"],
             "location": j["location"],
             "platform": j["platform"],
-            "source_tier": j.get("source_tier", "Direct ATS"),
+            "source_tier": j["source_tier"],
             "salary_range": j.get("salary_range", ""),
             "apply_url": j["apply_url"],
             "posted_at": j.get("posted_at", "Active (2026)"),
             "snippet": j["description"][:650],
         }
-        for i, j in enumerate(candidate_jobs[:16])
+        for i, j in enumerate(candidate_jobs[:18])
     ]
 
     prompt = f"""
 You are a precision Technical Recruiter & ATS Matching Engine.
-Select and score the BEST 10 distinct openings for this candidate from the harvested ATS & career listings below.
+Select and score the BEST 12 distinct early-career software engineering / internship roles from these 155 direct company career portals.
 
 CANDIDATE PROFILE:
 - Name: {user_profile.get('full_name', 'Candidate')}
 - Target Role: {user_profile.get('target_role', 'Software Engineer')}
-- Preferred Location: {user_profile.get('preferred_location', 'India / Remote')}
-- Verified Skills: {json.dumps(user_profile.get('verified_skills', []))}
+- Candidate ALREADY KNOWS these skills (NEVER list any of these in missing_skills!): {json.dumps(flat_skills)}
 - Resume Summary: {user_profile.get('summary', '')}
 
-HARVESTED LISTINGS:
+DIRECT COMPANY CAREER LISTINGS:
 {json.dumps(compact_jobs, indent=2)}
 
-RULES:
-1. {seniority_rule}
-2. Keep the exact `apply_url`, `company`, `platform`, and `source_tier` from the input listing.
-3. Set `work_mode` to `"Remote"`, `"Hybrid"`, or `"On-site"`, and `experience_level` to `"Entry"` or `"Mid"`.
-4. Extract `salary_range` if mentioned in snippet/input, else `""`.
-5. Compute a realistic `match_score` (65 to 96) and write a crisp `tailored_pitch` (2-sentence recruiter outreach note) + `why_fit`.
+STRICT RULES:
+1. Prioritize Internships, 2026/2027 New Grad, SDE-1, and early-career Software Engineer roles in India or Remote-India.
+2. NEVER put any skill from `Candidate ALREADY KNOWS` inside `missing_skills`! Only list 1 to 3 genuinely missing job-specific technologies (e.g. Go, Rust, Kubernetes, Kafka, Ruby, Scala) not in the candidate's verified skills list.
+3. Preserve exact `company`, `apply_url`, `platform`, and `source_tier` from the input.
+4. Set `work_mode` to `"Remote"`, `"Hybrid"`, or `"On-site"`, and `experience_level` to `"Entry"` or `"Mid"`.
+5. Compute a realistic `match_score` (75 to 96) and write a crisp `tailored_pitch` (2 sentences referencing the candidate's real skills/projects) + `why_fit`.
 
 Return ONLY raw valid JSON:
 {{
@@ -456,7 +308,7 @@ Return ONLY raw valid JSON:
       "title": "string",
       "company": "string",
       "location": "string",
-      "work_mode": "Remote",
+      "work_mode": "Hybrid",
       "experience_level": "Entry",
       "platform": "string",
       "source_tier": "Direct ATS",
@@ -465,7 +317,7 @@ Return ONLY raw valid JSON:
       "apply_url": "string",
       "match_score": 91,
       "matched_skills": ["Python", "C++"],
-      "missing_skills": ["Go"],
+      "missing_skills": ["Go", "Kubernetes"],
       "why_fit": "string",
       "tailored_pitch": "string"
     }}
@@ -486,8 +338,10 @@ Return ONLY raw valid JSON:
 
     parsed = json.loads(completion.choices[0].message.content)
     jobs = parsed.get("matched_jobs", [])
+    known_lower = {s.lower() for s in flat_skills}
     for j in jobs:
-        j["match_percentage"] = j.get("match_score", 80)
+        j["match_percentage"] = j.get("match_score", 82)
+        j["missing_skills"] = [s for s in (j.get("missing_skills") or []) if s.lower() not in known_lower][:4]
     jobs.sort(key=lambda x: x.get("match_score", 0), reverse=True)
     return jobs
 
@@ -500,22 +354,16 @@ async def find_and_score_jobs(user_profile: dict) -> list[dict]:
         flat_skills = list(raw_skills)
 
     target_role = user_profile.get("target_role") or "Software Engineer"
-    summary = user_profile.get("summary") or ""
-    coding_stats = user_profile.get("coding_stats") or {}
 
-    seniority_query, seniority_rule = _infer_seniority_keywords(target_role, coding_stats, summary)
-    boards = _load_company_boards()
-
-    async with httpx.AsyncClient(headers={"User-Agent": "WingStack-ATS-Scout/2.0"}) as http_client:
-        ats_jobs, custom_jobs, remote_and_hackathons = await asyncio.gather(
-            _fetch_all_direct_ats(http_client, boards),
-            _fetch_custom_portals_via_tavily(http_client, boards, target_role, flat_skills, seniority_query),
-            _fetch_public_remote_apis(http_client, flat_skills),
+    async with httpx.AsyncClient(headers={"User-Agent": "WingStack-ATS-Scout/3.0"}) as http_client:
+        ats_jobs, custom_jobs = await asyncio.gather(
+            _fetch_all_direct_ats(http_client),
+            _fetch_custom_portals_via_tavily(http_client, flat_skills),
         )
 
     seen_keys = set()
     deduped = []
-    for job in ats_jobs + custom_jobs + remote_and_hackathons:
+    for job in ats_jobs + custom_jobs:
         url = (job.get("apply_url") or "").strip()
         key = (job.get("company", "").lower(), job.get("title", "").lower(), url)
         if url and key not in seen_keys:
@@ -524,4 +372,4 @@ async def find_and_score_jobs(user_profile: dict) -> list[dict]:
             deduped.append(job)
 
     deduped.sort(key=lambda x: x.get("_pre_score", 0), reverse=True)
-    return await _score_jobs_with_groq(user_profile, deduped[:18], seniority_rule)
+    return await _score_jobs_with_groq(user_profile, deduped[:18], flat_skills)

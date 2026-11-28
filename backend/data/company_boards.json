@@ -1,72 +1,1980 @@
-﻿[
-{"company":"Razorpay","hq_or_india_hubs":["Bengaluru","Remote"],"category":"Indian Unicorn","ats_type":"greenhouse","slug":"razorpaysoftwareprivatelimited","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/razorpaysoftwareprivatelimited/jobs?content=true","careers_page":"https://razorpay.com/jobs/"},
-{"company":"CRED","hq_or_india_hubs":["Bengaluru"],"category":"Indian Unicorn","ats_type":"lever","slug":"cred","fetch_method":"http_get_json","api_url":"https://api.lever.co/v0/postings/cred?mode=json","careers_page":"https://careers.cred.club/"},
-{"company":"Postman","hq_or_india_hubs":["Bengaluru"],"category":"Indian Unicorn","ats_type":"greenhouse","slug":"postman","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/postman/jobs?content=true","careers_page":"https://www.postman.com/company/careers/"},
-{"company":"BrowserStack","hq_or_india_hubs":["Mumbai","Remote"],"category":"Indian Unicorn","ats_type":"greenhouse","slug":"browserstack","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/browserstack/jobs?content=true","careers_page":"https://www.browserstack.com/careers"},
-{"company":"Groww","hq_or_india_hubs":["Bengaluru"],"category":"Indian Unicorn","ats_type":"greenhouse","slug":"groww","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/groww/jobs?content=true","careers_page":"https://groww.in/careers"},
-{"company":"MoEngage","hq_or_india_hubs":["Bengaluru"],"category":"Indian Startup","ats_type":"greenhouse","slug":"moengage","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/moengage/jobs?content=true","careers_page":"https://www.moengage.com/careers/"},
-{"company":"Zepto","hq_or_india_hubs":["Mumbai","Bengaluru"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.zeptonow.com/careers"},
-{"company":"Meesho","hq_or_india_hubs":["Bengaluru"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.meesho.io/jobs"},
-{"company":"Swiggy","hq_or_india_hubs":["Bengaluru"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://careers.swiggy.com/"},
-{"company":"Zomato","hq_or_india_hubs":["Gurugram"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.zomato.com/careers"},
-{"company":"PhonePe","hq_or_india_hubs":["Bengaluru","Pune"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.phonepe.com/careers/"},
-{"company":"Darwinbox","hq_or_india_hubs":["Hyderabad"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://explore.darwinbox.com/careers"},
-{"company":"Sprinto","hq_or_india_hubs":["Chennai","Remote"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://sprinto.com/careers"},
-{"company":"Hasura","hq_or_india_hubs":["Bengaluru","Remote"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://hasura.io/careers/"},
-{"company":"Appsmith","hq_or_india_hubs":["Bengaluru","Remote"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.appsmith.com/careers"},
-{"company":"Setu","hq_or_india_hubs":["Bengaluru"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://setu.co/careers"},
-{"company":"Juspay","hq_or_india_hubs":["Bengaluru"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://juspay.in/careers"},
-{"company":"Slice","hq_or_india_hubs":["Bengaluru"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.sliceit.com/careers"},
-{"company":"Jupiter","hq_or_india_hubs":["Bengaluru","Mumbai"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://jupiter.money/careers/"},
-{"company":"Chargebee","hq_or_india_hubs":["Chennai","Remote"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.chargebee.com/company/careers/"},
-{"company":"Freshworks","hq_or_india_hubs":["Chennai","Bengaluru","Hyderabad"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.freshworks.com/company/careers/"},
-{"company":"Zoho","hq_or_india_hubs":["Chennai"],"category":"Indian Product Company","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.zoho.com/careers/"},
-{"company":"Gupshup","hq_or_india_hubs":["Bengaluru","Mumbai"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.gupshup.io/careers"},
-{"company":"Innovaccer","hq_or_india_hubs":["Noida","Remote"],"category":"Indian-origin Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://innovaccer.com/careers"},
-{"company":"CleverTap","hq_or_india_hubs":["Mumbai","Bengaluru"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://clevertap.com/careers/"},
-{"company":"Hevo Data","hq_or_india_hubs":["Bengaluru","Remote"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://hevodata.com/careers/"},
-{"company":"Scrut Automation","hq_or_india_hubs":["Bengaluru","Remote"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.scrut.io/careers"},
-{"company":"Kissflow","hq_or_india_hubs":["Chennai"],"category":"Indian Startup","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://kissflow.com/careers/"},
-{"company":"Whatfix","hq_or_india_hubs":["Bengaluru"],"category":"Indian-origin Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://whatfix.com/company/careers/"},
-{"company":"HighRadius","hq_or_india_hubs":["Hyderabad"],"category":"Indian-origin Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.highradius.com/careers/"},
-{"company":"Flipkart","hq_or_india_hubs":["Bengaluru"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.flipkartcareers.com/"},
-{"company":"Paytm","hq_or_india_hubs":["Noida","Bengaluru"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://paytm.com/careers"},
-{"company":"Dream11","hq_or_india_hubs":["Mumbai"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.dreamsports.group/careers"},
-{"company":"Rapido","hq_or_india_hubs":["Bengaluru"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.rapido.bike/careers"},
-{"company":"Lenskart","hq_or_india_hubs":["Gurugram","Bengaluru"],"category":"Indian Unicorn","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.lenskart.com/careers"},
-{"company":"Stripe","hq_or_india_hubs":["Bengaluru","Remote"],"category":"Global Fintech","ats_type":"greenhouse","slug":"stripe","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/stripe/jobs?content=true","careers_page":"https://stripe.com/jobs"},
-{"company":"Airbnb","hq_or_india_hubs":["Bengaluru"],"category":"Global Product","ats_type":"greenhouse","slug":"airbnb","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/airbnb/jobs?content=true","careers_page":"https://careers.airbnb.com/"},
-{"company":"Coinbase","hq_or_india_hubs":["Remote-India"],"category":"Global Fintech","ats_type":"greenhouse","slug":"coinbase","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/coinbase/jobs?content=true","careers_page":"https://www.coinbase.com/careers"},
-{"company":"Databricks","hq_or_india_hubs":["Bengaluru"],"category":"Global Data/AI","ats_type":"greenhouse","slug":"databricks","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/databricks/jobs?content=true","careers_page":"https://www.databricks.com/company/careers"},
-{"company":"Cloudflare","hq_or_india_hubs":["Bengaluru","Remote-India"],"category":"Global Infrastructure","ats_type":"greenhouse","slug":"cloudflare","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs?content=true","careers_page":"https://www.cloudflare.com/careers/"},
-{"company":"GitLab","hq_or_india_hubs":["Remote-India"],"category":"Global DevTools","ats_type":"greenhouse","slug":"gitlab","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/gitlab/jobs?content=true","careers_page":"https://about.gitlab.com/jobs/"},
-{"company":"Elastic","hq_or_india_hubs":["Remote-India","Bengaluru"],"category":"Global Data/Search","ats_type":"greenhouse","slug":"elastic","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/elastic/jobs?content=true","careers_page":"https://www.elastic.co/about/careers/"},
-{"company":"MongoDB","hq_or_india_hubs":["Gurugram","Bengaluru","Remote-India"],"category":"Global Database","ats_type":"greenhouse","slug":"mongodb","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/mongodb/jobs?content=true","careers_page":"https://www.mongodb.com/company/careers"},
-{"company":"Twilio","hq_or_india_hubs":["Bengaluru","Remote-India"],"category":"Global CPaaS","ats_type":"greenhouse","slug":"twilio","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/twilio/jobs?content=true","careers_page":"https://www.twilio.com/en-us/company/jobs"},
-{"company":"Okta","hq_or_india_hubs":["Bengaluru"],"category":"Global Security","ats_type":"greenhouse","slug":"okta","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/okta/jobs?content=true","careers_page":"https://www.okta.com/company/careers/"},
-{"company":"Zscaler","hq_or_india_hubs":["Bengaluru","Pune"],"category":"Global Security","ats_type":"greenhouse","slug":"zscaler","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/zscaler/jobs?content=true","careers_page":"https://www.zscaler.com/careers"},
-{"company":"Figma","hq_or_india_hubs":["Remote-India"],"category":"Global Design/Product","ats_type":"greenhouse","slug":"figma","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/figma/jobs?content=true","careers_page":"https://www.figma.com/careers/"},
-{"company":"Vercel","hq_or_india_hubs":["Remote-India"],"category":"Global DevTools","ats_type":"greenhouse","slug":"vercel","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/vercel/jobs?content=true","careers_page":"https://vercel.com/careers"},
-{"company":"Anthropic","hq_or_india_hubs":["Bengaluru","Remote-India"],"category":"Global AI","ats_type":"greenhouse","slug":"anthropic","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/anthropic/jobs?content=true","careers_page":"https://www.anthropic.com/careers"},
-{"company":"Scale AI","hq_or_india_hubs":["Remote-India"],"category":"Global AI","ats_type":"greenhouse","slug":"scaleai","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/scaleai/jobs?content=true","careers_page":"https://scale.com/careers"},
-{"company":"Reddit","hq_or_india_hubs":["Bengaluru"],"category":"Global Product","ats_type":"greenhouse","slug":"reddit","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/reddit/jobs?content=true","careers_page":"https://redditinc.com/careers"},
-{"company":"Robinhood","hq_or_india_hubs":["Bengaluru"],"category":"Global Fintech","ats_type":"greenhouse","slug":"robinhood","fetch_method":"http_get_json","api_url":"https://boards-api.greenhouse.io/v1/boards/robinhood/jobs?content=true","careers_page":"https://careers.robinhood.com/"},
-{"company":"Notion","hq_or_india_hubs":["Remote-India"],"category":"Global Product","ats_type":"ashby","slug":"notion","fetch_method":"http_get_json","api_url":"https://api.ashbyhq.com/posting-api/job-board/notion?includeCompensation=true","careers_page":"https://www.notion.com/careers"},
-{"company":"Linear","hq_or_india_hubs":["Remote-India"],"category":"Global Product","ats_type":"ashby","slug":"linear","fetch_method":"http_get_json","api_url":"https://api.ashbyhq.com/posting-api/job-board/linear?includeCompensation=true","careers_page":"https://linear.app/careers"},
-{"company":"Supabase","hq_or_india_hubs":["Remote-India"],"category":"Global DevTools","ats_type":"ashby","slug":"supabase","fetch_method":"http_get_json","api_url":"https://api.ashbyhq.com/posting-api/job-board/supabase?includeCompensation=true","careers_page":"https://supabase.com/careers"},
-{"company":"OpenAI","hq_or_india_hubs":["Remote-India"],"category":"Global AI","ats_type":"ashby","slug":"openai","fetch_method":"http_get_json","api_url":"https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=true","careers_page":"https://openai.com/careers/"},
-{"company":"Google","hq_or_india_hubs":["Bengaluru","Hyderabad"],"category":"Global Big Tech","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.google.com/about/careers/applications/"},
-{"company":"Microsoft","hq_or_india_hubs":["Hyderabad","Bengaluru","Noida"],"category":"Global Big Tech","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://careers.microsoft.com/"},
-{"company":"Amazon","hq_or_india_hubs":["Bengaluru","Hyderabad","Chennai","Pune"],"category":"Global Big Tech","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.amazon.jobs/"},
-{"company":"Uber","hq_or_india_hubs":["Bengaluru","Hyderabad"],"category":"Global Product","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.uber.com/global/en/careers/"},
-{"company":"Atlassian","hq_or_india_hubs":["Bengaluru"],"category":"Global Product","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.atlassian.com/company/careers"},
-{"company":"Snowflake","hq_or_india_hubs":["Pune","Bengaluru"],"category":"Global Data","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://careers.snowflake.com/"},
-{"company":"Confluent","hq_or_india_hubs":["Bengaluru","Remote-India"],"category":"Global Data","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.confluent.io/careers/"},
-{"company":"Palo Alto Networks","hq_or_india_hubs":["Bengaluru","Pune"],"category":"Global Security","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://jobs.paloaltonetworks.com/"},
-{"company":"Rubrik","hq_or_india_hubs":["Pune","Bengaluru"],"category":"Global Data Security","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.rubrik.com/company/careers"},
-{"company":"Nutanix","hq_or_india_hubs":["Bengaluru","Pune"],"category":"Global Infrastructure","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.nutanix.com/company/careers"},
-{"company":"Cohesity","hq_or_india_hubs":["Bengaluru","Hyderabad"],"category":"Global Data Security","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.cohesity.com/company/careers/"},
-{"company":"CrowdStrike","hq_or_india_hubs":["Pune","Remote-India"],"category":"Global Security","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.crowdstrike.com/careers/"},
-{"company":"ThoughtSpot","hq_or_india_hubs":["Bengaluru"],"category":"Global Analytics","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://www.thoughtspot.com/careers"},
-{"company":"Intuit","hq_or_india_hubs":["Bengaluru"],"category":"Global Fintech","ats_type":"custom","slug":null,"fetch_method":"custom_or_headless","api_url":null,"careers_page":"https://jobs.intuit.com/"}
+[
+  {
+    "company": "Razorpay",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "greenhouse",
+    "slug": "razorpaysoftwareprivatelimited",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/razorpaysoftwareprivatelimited/jobs?content=true",
+    "careers_page": "https://razorpay.com/jobs/"
+  },
+  {
+    "company": "CRED",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "lever",
+    "slug": "cred",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.lever.co/v0/postings/cred?mode=json",
+    "careers_page": "https://careers.cred.club/"
+  },
+  {
+    "company": "Postman",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "greenhouse",
+    "slug": "postman",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/postman/jobs?content=true",
+    "careers_page": "https://www.postman.com/company/careers/"
+  },
+  {
+    "company": "BrowserStack",
+    "hq_or_india_hubs": [
+      "Mumbai",
+      "Remote"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "greenhouse",
+    "slug": "browserstack",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/browserstack/jobs?content=true",
+    "careers_page": "https://www.browserstack.com/careers"
+  },
+  {
+    "company": "Groww",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "greenhouse",
+    "slug": "groww",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/groww/jobs?content=true",
+    "careers_page": "https://groww.in/careers"
+  },
+  {
+    "company": "MoEngage",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "greenhouse",
+    "slug": "moengage",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/moengage/jobs?content=true",
+    "careers_page": "https://www.moengage.com/careers/"
+  },
+  {
+    "company": "Zepto",
+    "hq_or_india_hubs": [
+      "Mumbai",
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.zeptonow.com/careers"
+  },
+  {
+    "company": "Meesho",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.meesho.io/jobs"
+  },
+  {
+    "company": "Swiggy",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.swiggy.com/"
+  },
+  {
+    "company": "Zomato",
+    "hq_or_india_hubs": [
+      "Gurugram"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.zomato.com/careers"
+  },
+  {
+    "company": "PhonePe",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Pune"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.phonepe.com/careers/"
+  },
+  {
+    "company": "Darwinbox",
+    "hq_or_india_hubs": [
+      "Hyderabad"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://explore.darwinbox.com/careers"
+  },
+  {
+    "company": "Sprinto",
+    "hq_or_india_hubs": [
+      "Chennai",
+      "Remote"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://sprinto.com/careers"
+  },
+  {
+    "company": "Hasura",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://hasura.io/careers/"
+  },
+  {
+    "company": "Appsmith",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.appsmith.com/careers"
+  },
+  {
+    "company": "Setu",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://setu.co/careers"
+  },
+  {
+    "company": "Juspay",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://juspay.in/careers"
+  },
+  {
+    "company": "Slice",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.sliceit.com/careers"
+  },
+  {
+    "company": "Jupiter",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Mumbai"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://jupiter.money/careers/"
+  },
+  {
+    "company": "Chargebee",
+    "hq_or_india_hubs": [
+      "Chennai",
+      "Remote"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.chargebee.com/company/careers/"
+  },
+  {
+    "company": "Freshworks",
+    "hq_or_india_hubs": [
+      "Chennai",
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.freshworks.com/company/careers/"
+  },
+  {
+    "company": "Zoho",
+    "hq_or_india_hubs": [
+      "Chennai"
+    ],
+    "category": "Indian Product Company",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.zoho.com/careers/"
+  },
+  {
+    "company": "Gupshup",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Mumbai"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.gupshup.io/careers"
+  },
+  {
+    "company": "Innovaccer",
+    "hq_or_india_hubs": [
+      "Noida",
+      "Remote"
+    ],
+    "category": "Indian-origin Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://innovaccer.com/careers"
+  },
+  {
+    "company": "CleverTap",
+    "hq_or_india_hubs": [
+      "Mumbai",
+      "Bengaluru"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://clevertap.com/careers/"
+  },
+  {
+    "company": "Hevo Data",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://hevodata.com/careers/"
+  },
+  {
+    "company": "Scrut Automation",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.scrut.io/careers"
+  },
+  {
+    "company": "Kissflow",
+    "hq_or_india_hubs": [
+      "Chennai"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://kissflow.com/careers/"
+  },
+  {
+    "company": "Whatfix",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian-origin Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://whatfix.com/company/careers/"
+  },
+  {
+    "company": "HighRadius",
+    "hq_or_india_hubs": [
+      "Hyderabad"
+    ],
+    "category": "Indian-origin Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.highradius.com/careers/"
+  },
+  {
+    "company": "Flipkart",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.flipkartcareers.com/"
+  },
+  {
+    "company": "Paytm",
+    "hq_or_india_hubs": [
+      "Noida",
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://paytm.com/careers"
+  },
+  {
+    "company": "Dream11",
+    "hq_or_india_hubs": [
+      "Mumbai"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.dreamsports.group/careers"
+  },
+  {
+    "company": "Rapido",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.rapido.bike/careers"
+  },
+  {
+    "company": "Lenskart",
+    "hq_or_india_hubs": [
+      "Gurugram",
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.lenskart.com/careers"
+  },
+  {
+    "company": "Stripe",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "greenhouse",
+    "slug": "stripe",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/stripe/jobs?content=true",
+    "careers_page": "https://stripe.com/jobs"
+  },
+  {
+    "company": "Airbnb",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Product",
+    "ats_type": "greenhouse",
+    "slug": "airbnb",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/airbnb/jobs?content=true",
+    "careers_page": "https://careers.airbnb.com/"
+  },
+  {
+    "company": "Coinbase",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "greenhouse",
+    "slug": "coinbase",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/coinbase/jobs?content=true",
+    "careers_page": "https://www.coinbase.com/careers"
+  },
+  {
+    "company": "Databricks",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Data/AI",
+    "ats_type": "greenhouse",
+    "slug": "databricks",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/databricks/jobs?content=true",
+    "careers_page": "https://www.databricks.com/company/careers"
+  },
+  {
+    "company": "Cloudflare",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote-India"
+    ],
+    "category": "Global Infrastructure",
+    "ats_type": "greenhouse",
+    "slug": "cloudflare",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs?content=true",
+    "careers_page": "https://www.cloudflare.com/careers/"
+  },
+  {
+    "company": "GitLab",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global DevTools",
+    "ats_type": "greenhouse",
+    "slug": "gitlab",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/gitlab/jobs?content=true",
+    "careers_page": "https://about.gitlab.com/jobs/"
+  },
+  {
+    "company": "Elastic",
+    "hq_or_india_hubs": [
+      "Remote-India",
+      "Bengaluru"
+    ],
+    "category": "Global Data/Search",
+    "ats_type": "greenhouse",
+    "slug": "elastic",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/elastic/jobs?content=true",
+    "careers_page": "https://www.elastic.co/about/careers/"
+  },
+  {
+    "company": "MongoDB",
+    "hq_or_india_hubs": [
+      "Gurugram",
+      "Bengaluru",
+      "Remote-India"
+    ],
+    "category": "Global Database",
+    "ats_type": "greenhouse",
+    "slug": "mongodb",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/mongodb/jobs?content=true",
+    "careers_page": "https://www.mongodb.com/company/careers"
+  },
+  {
+    "company": "Twilio",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote-India"
+    ],
+    "category": "Global CPaaS",
+    "ats_type": "greenhouse",
+    "slug": "twilio",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/twilio/jobs?content=true",
+    "careers_page": "https://www.twilio.com/en-us/company/jobs"
+  },
+  {
+    "company": "Okta",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Security",
+    "ats_type": "greenhouse",
+    "slug": "okta",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/okta/jobs?content=true",
+    "careers_page": "https://www.okta.com/company/careers/"
+  },
+  {
+    "company": "Zscaler",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Pune"
+    ],
+    "category": "Global Security",
+    "ats_type": "greenhouse",
+    "slug": "zscaler",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/zscaler/jobs?content=true",
+    "careers_page": "https://www.zscaler.com/careers"
+  },
+  {
+    "company": "Figma",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Design/Product",
+    "ats_type": "greenhouse",
+    "slug": "figma",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/figma/jobs?content=true",
+    "careers_page": "https://www.figma.com/careers/"
+  },
+  {
+    "company": "Vercel",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global DevTools",
+    "ats_type": "greenhouse",
+    "slug": "vercel",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/vercel/jobs?content=true",
+    "careers_page": "https://vercel.com/careers"
+  },
+  {
+    "company": "Anthropic",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote-India"
+    ],
+    "category": "Global AI",
+    "ats_type": "greenhouse",
+    "slug": "anthropic",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/anthropic/jobs?content=true",
+    "careers_page": "https://www.anthropic.com/careers"
+  },
+  {
+    "company": "Scale AI",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global AI",
+    "ats_type": "greenhouse",
+    "slug": "scaleai",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/scaleai/jobs?content=true",
+    "careers_page": "https://scale.com/careers"
+  },
+  {
+    "company": "Reddit",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Product",
+    "ats_type": "greenhouse",
+    "slug": "reddit",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/reddit/jobs?content=true",
+    "careers_page": "https://redditinc.com/careers"
+  },
+  {
+    "company": "Robinhood",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "greenhouse",
+    "slug": "robinhood",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/robinhood/jobs?content=true",
+    "careers_page": "https://careers.robinhood.com/"
+  },
+  {
+    "company": "Notion",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "ashby",
+    "slug": "notion",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/notion?includeCompensation=true",
+    "careers_page": "https://www.notion.com/careers"
+  },
+  {
+    "company": "Linear",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "ashby",
+    "slug": "linear",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/linear?includeCompensation=true",
+    "careers_page": "https://linear.app/careers"
+  },
+  {
+    "company": "Supabase",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global DevTools",
+    "ats_type": "ashby",
+    "slug": "supabase",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/supabase?includeCompensation=true",
+    "careers_page": "https://supabase.com/careers"
+  },
+  {
+    "company": "OpenAI",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global AI",
+    "ats_type": "ashby",
+    "slug": "openai",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=true",
+    "careers_page": "https://openai.com/careers/"
+  },
+  {
+    "company": "Google",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Global Big Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.google.com/about/careers/applications/"
+  },
+  {
+    "company": "Microsoft",
+    "hq_or_india_hubs": [
+      "Hyderabad",
+      "Bengaluru",
+      "Noida"
+    ],
+    "category": "Global Big Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.microsoft.com/"
+  },
+  {
+    "company": "Amazon",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad",
+      "Chennai",
+      "Pune"
+    ],
+    "category": "Global Big Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.amazon.jobs/"
+  },
+  {
+    "company": "Uber",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Global Product",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.uber.com/global/en/careers/"
+  },
+  {
+    "company": "Atlassian",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Product",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.atlassian.com/company/careers"
+  },
+  {
+    "company": "Snowflake",
+    "hq_or_india_hubs": [
+      "Pune",
+      "Bengaluru"
+    ],
+    "category": "Global Data",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.snowflake.com/"
+  },
+  {
+    "company": "Confluent",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote-India"
+    ],
+    "category": "Global Data",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.confluent.io/careers/"
+  },
+  {
+    "company": "Palo Alto Networks",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Pune"
+    ],
+    "category": "Global Security",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://jobs.paloaltonetworks.com/"
+  },
+  {
+    "company": "Rubrik",
+    "hq_or_india_hubs": [
+      "Pune",
+      "Bengaluru"
+    ],
+    "category": "Global Data Security",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.rubrik.com/company/careers"
+  },
+  {
+    "company": "Nutanix",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Pune"
+    ],
+    "category": "Global Infrastructure",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.nutanix.com/company/careers"
+  },
+  {
+    "company": "Cohesity",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Global Data Security",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.cohesity.com/company/careers/"
+  },
+  {
+    "company": "CrowdStrike",
+    "hq_or_india_hubs": [
+      "Pune",
+      "Remote-India"
+    ],
+    "category": "Global Security",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.crowdstrike.com/careers/"
+  },
+  {
+    "company": "ThoughtSpot",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Analytics",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.thoughtspot.com/careers"
+  },
+  {
+    "company": "Intuit",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://jobs.intuit.com/"
+  },
+  {
+    "company": "InMobi",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "greenhouse",
+    "slug": "inmobi",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/inmobi/jobs?content=true",
+    "careers_page": "https://www.inmobi.com/company/careers"
+  },
+  {
+    "company": "Khatabook",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://khatabook.com/careers"
+  },
+  {
+    "company": "Unacademy",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://unacademy.com/careers"
+  },
+  {
+    "company": "upGrad",
+    "hq_or_india_hubs": [
+      "Mumbai"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.upgrad.com/careers/"
+  },
+  {
+    "company": "PhysicsWallah",
+    "hq_or_india_hubs": [
+      "Noida"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.pw.live/careers"
+  },
+  {
+    "company": "Delhivery",
+    "hq_or_india_hubs": [
+      "Gurugram"
+    ],
+    "category": "Indian Public Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.delhivery.com/careers"
+  },
+  {
+    "company": "Nykaa",
+    "hq_or_india_hubs": [
+      "Mumbai"
+    ],
+    "category": "Indian Public Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.nykaa.com/careers"
+  },
+  {
+    "company": "PolicyBazaar",
+    "hq_or_india_hubs": [
+      "Gurugram"
+    ],
+    "category": "Indian Public Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.policybazaar.com/careers/"
+  },
+  {
+    "company": "Pine Labs",
+    "hq_or_india_hubs": [
+      "Noida",
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.pinelabs.com/careers"
+  },
+  {
+    "company": "OYO",
+    "hq_or_india_hubs": [
+      "Gurugram"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.oyorooms.com/careers/"
+  },
+  {
+    "company": "MakeMyTrip",
+    "hq_or_india_hubs": [
+      "Gurugram",
+      "Bengaluru"
+    ],
+    "category": "Indian Public Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.makemytrip.com/"
+  },
+  {
+    "company": "Ola",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.olacabs.com/careers"
+  },
+  {
+    "company": "Urban Company",
+    "hq_or_india_hubs": [
+      "Gurugram"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.urbancompany.com/"
+  },
+  {
+    "company": "ShareChat",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://sharechat.com/careers"
+  },
+  {
+    "company": "CARS24",
+    "hq_or_india_hubs": [
+      "Gurugram"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.cars24.com/careers/"
+  },
+  {
+    "company": "Spinny",
+    "hq_or_india_hubs": [
+      "Gurugram",
+      "Bengaluru"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.spinny.com/careers/"
+  },
+  {
+    "company": "Navi",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Fintech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://navi.com/careers"
+  },
+  {
+    "company": "MobiKwik",
+    "hq_or_india_hubs": [
+      "Gurugram"
+    ],
+    "category": "Indian Fintech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.mobikwik.com/careers"
+  },
+  {
+    "company": "Acko",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Mumbai"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.acko.com/careers/"
+  },
+  {
+    "company": "Zeta",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Mumbai"
+    ],
+    "category": "Indian Unicorn",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.zeta.tech/in/careers/"
+  },
+  {
+    "company": "Zerodha",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Fintech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://zerodha.com/careers/"
+  },
+  {
+    "company": "Cult.fit",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.cult.fit/careers"
+  },
+  {
+    "company": "Sarvam AI",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Indian AI Startup",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.sarvam.ai/careers"
+  },
+  {
+    "company": "Fractal Analytics",
+    "hq_or_india_hubs": [
+      "Mumbai",
+      "Bengaluru",
+      "Gurugram"
+    ],
+    "category": "Indian AI/Analytics",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://fractal.ai/careers/"
+  },
+  {
+    "company": "Tata Consultancy Services",
+    "hq_or_india_hubs": [
+      "Mumbai",
+      "Pune",
+      "Hyderabad",
+      "Chennai",
+      "Bengaluru"
+    ],
+    "category": "Indian IT MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.tcs.com/careers"
+  },
+  {
+    "company": "Infosys",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Pune",
+      "Hyderabad",
+      "Chennai"
+    ],
+    "category": "Indian IT MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.infosys.com/careers/"
+  },
+  {
+    "company": "Wipro",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad",
+      "Pune",
+      "Chennai"
+    ],
+    "category": "Indian IT MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.wipro.com/"
+  },
+  {
+    "company": "HCLTech",
+    "hq_or_india_hubs": [
+      "Noida",
+      "Chennai",
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Indian IT MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.hcltech.com/careers"
+  },
+  {
+    "company": "Tech Mahindra",
+    "hq_or_india_hubs": [
+      "Pune",
+      "Hyderabad",
+      "Bengaluru",
+      "Chennai"
+    ],
+    "category": "Indian IT MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.techmahindra.com/"
+  },
+  {
+    "company": "LTIMindtree",
+    "hq_or_india_hubs": [
+      "Mumbai",
+      "Bengaluru",
+      "Pune",
+      "Chennai"
+    ],
+    "category": "Indian IT MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.ltimindtree.com/careers/"
+  },
+  {
+    "company": "Mphasis",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Pune",
+      "Chennai"
+    ],
+    "category": "IT Services MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.mphasis.com/"
+  },
+  {
+    "company": "Deloitte",
+    "hq_or_india_hubs": [
+      "Hyderabad",
+      "Bengaluru",
+      "Mumbai",
+      "Gurugram"
+    ],
+    "category": "Big4",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www2.deloitte.com/in/en/careers.html"
+  },
+  {
+    "company": "PwC",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad",
+      "Mumbai",
+      "Gurugram",
+      "Kolkata"
+    ],
+    "category": "Big4",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.pwc.in/careers.html"
+  },
+  {
+    "company": "EY",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Gurugram",
+      "Mumbai",
+      "Chennai",
+      "Kolkata"
+    ],
+    "category": "Big4",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.ey.com/en_in/careers"
+  },
+  {
+    "company": "KPMG",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Gurugram",
+      "Mumbai",
+      "Hyderabad"
+    ],
+    "category": "Big4",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://kpmg.com/in/en/careers.html"
+  },
+  {
+    "company": "Accenture",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad",
+      "Pune",
+      "Chennai",
+      "Gurugram"
+    ],
+    "category": "Global IT Consulting MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.accenture.com/in-en/careers"
+  },
+  {
+    "company": "Capgemini",
+    "hq_or_india_hubs": [
+      "Mumbai",
+      "Bengaluru",
+      "Pune",
+      "Hyderabad",
+      "Chennai"
+    ],
+    "category": "Global IT Consulting MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.capgemini.com/in-en/careers/"
+  },
+  {
+    "company": "Cognizant",
+    "hq_or_india_hubs": [
+      "Chennai",
+      "Bengaluru",
+      "Hyderabad",
+      "Pune"
+    ],
+    "category": "Global IT Services MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.cognizant.com/india-en/"
+  },
+  {
+    "company": "IBM",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad",
+      "Pune",
+      "Noida"
+    ],
+    "category": "Global MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.ibm.com/careers"
+  },
+  {
+    "company": "Datadog",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Observability",
+    "ats_type": "greenhouse",
+    "slug": "datadog",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/datadog/jobs?content=true",
+    "careers_page": "https://careers.datadoghq.com/"
+  },
+  {
+    "company": "Pinterest",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "greenhouse",
+    "slug": "pinterest",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/pinterest/jobs?content=true",
+    "careers_page": "https://www.pinterestcareers.com/"
+  },
+  {
+    "company": "Dropbox",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "greenhouse",
+    "slug": "dropbox",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/dropbox/jobs?content=true",
+    "careers_page": "https://jobs.dropbox.com/"
+  },
+  {
+    "company": "Lyft",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "greenhouse",
+    "slug": "lyft",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/lyft/jobs?content=true",
+    "careers_page": "https://www.lyft.com/careers"
+  },
+  {
+    "company": "Asana",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global SaaS",
+    "ats_type": "greenhouse",
+    "slug": "asana",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/asana/jobs?content=true",
+    "careers_page": "https://asana.com/jobs"
+  },
+  {
+    "company": "PagerDuty",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global DevOps",
+    "ats_type": "greenhouse",
+    "slug": "pagerduty",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/pagerduty/jobs?content=true",
+    "careers_page": "https://www.pagerduty.com/careers/"
+  },
+  {
+    "company": "Fivetran",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Remote-India"
+    ],
+    "category": "Global Data",
+    "ats_type": "greenhouse",
+    "slug": "fivetran",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/fivetran/jobs?content=true",
+    "careers_page": "https://www.fivetran.com/careers"
+  },
+  {
+    "company": "Samsara",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global IoT",
+    "ats_type": "greenhouse",
+    "slug": "samsara",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/samsara/jobs?content=true",
+    "careers_page": "https://www.samsara.com/company/careers"
+  },
+  {
+    "company": "Discord",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "greenhouse",
+    "slug": "discord",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/discord/jobs?content=true",
+    "careers_page": "https://discord.com/careers"
+  },
+  {
+    "company": "Duolingo",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "greenhouse",
+    "slug": "duolingo",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/duolingo/jobs?content=true",
+    "careers_page": "https://careers.duolingo.com/"
+  },
+  {
+    "company": "Airtable",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global SaaS",
+    "ats_type": "greenhouse",
+    "slug": "airtable",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/airtable/jobs?content=true",
+    "careers_page": "https://airtable.com/careers"
+  },
+  {
+    "company": "Grammarly",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global AI Product",
+    "ats_type": "greenhouse",
+    "slug": "grammarly",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/grammarly/jobs?content=true",
+    "careers_page": "https://www.grammarly.com/jobs"
+  },
+  {
+    "company": "Intercom",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global SaaS",
+    "ats_type": "greenhouse",
+    "slug": "intercom",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/intercom/jobs?content=true",
+    "careers_page": "https://www.intercom.com/careers"
+  },
+  {
+    "company": "Glean",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global AI",
+    "ats_type": "greenhouse",
+    "slug": "gleanwork",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/gleanwork/jobs?content=true",
+    "careers_page": "https://www.glean.com/careers"
+  },
+  {
+    "company": "Instacart",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "greenhouse",
+    "slug": "instacart",
+    "fetch_method": "http_get_json",
+    "api_url": "https://boards-api.greenhouse.io/v1/boards/instacart/jobs?content=true",
+    "careers_page": "https://careers.instacart.com/"
+  },
+  {
+    "company": "Plaid",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "lever",
+    "slug": "plaid",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.lever.co/v0/postings/plaid?mode=json",
+    "careers_page": "https://plaid.com/careers/"
+  },
+  {
+    "company": "Palantir",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Data/AI",
+    "ats_type": "lever",
+    "slug": "palantir",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.lever.co/v0/postings/palantir?mode=json",
+    "careers_page": "https://www.palantir.com/careers/"
+  },
+  {
+    "company": "Spotify",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "lever",
+    "slug": "spotify",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.lever.co/v0/postings/spotify?mode=json",
+    "careers_page": "https://www.lifeatspotify.com/jobs"
+  },
+  {
+    "company": "Ramp",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "ashby",
+    "slug": "ramp",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/ramp?includeCompensation=true",
+    "careers_page": "https://ramp.com/careers"
+  },
+  {
+    "company": "Deel",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global HR Tech",
+    "ats_type": "ashby",
+    "slug": "deel",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/deel?includeCompensation=true",
+    "careers_page": "https://www.deel.com/careers/"
+  },
+  {
+    "company": "Perplexity",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global AI",
+    "ats_type": "ashby",
+    "slug": "perplexity",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/perplexity?includeCompensation=true",
+    "careers_page": "https://www.perplexity.ai/hub/careers"
+  },
+  {
+    "company": "Replit",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global DevTools",
+    "ats_type": "ashby",
+    "slug": "replit",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/replit?includeCompensation=true",
+    "careers_page": "https://replit.com/careers"
+  },
+  {
+    "company": "Retool",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global DevTools",
+    "ats_type": "ashby",
+    "slug": "retool",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/retool?includeCompensation=true",
+    "careers_page": "https://retool.com/careers"
+  },
+  {
+    "company": "Zapier",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global SaaS",
+    "ats_type": "ashby",
+    "slug": "zapier",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/zapier?includeCompensation=true",
+    "careers_page": "https://zapier.com/jobs"
+  },
+  {
+    "company": "Cohere",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global AI",
+    "ats_type": "ashby",
+    "slug": "cohere",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/cohere?includeCompensation=true",
+    "careers_page": "https://cohere.com/careers"
+  },
+  {
+    "company": "ElevenLabs",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global AI",
+    "ats_type": "ashby",
+    "slug": "elevenlabs",
+    "fetch_method": "http_get_json",
+    "api_url": "https://api.ashbyhq.com/posting-api/job-board/elevenlabs?includeCompensation=true",
+    "careers_page": "https://elevenlabs.io/careers"
+  },
+  {
+    "company": "NVIDIA",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad",
+      "Pune"
+    ],
+    "category": "Global Semiconductor/AI",
+    "ats_type": "workday",
+    "slug": "nvidia",
+    "fetch_method": "http_post_json",
+    "api_url": "https://nvidia.wd5.myworkdayjobs.com/wday/cxs/nvidia/NVIDIAExternalCareerSite/jobs",
+    "careers_page": "https://www.nvidia.com/en-in/about-nvidia/careers/"
+  },
+  {
+    "company": "Adobe",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Noida"
+    ],
+    "category": "Global Big Tech",
+    "ats_type": "workday",
+    "slug": "adobe",
+    "fetch_method": "http_post_json",
+    "api_url": "https://adobe.wd5.myworkdayjobs.com/wday/cxs/adobe/external_experienced/jobs",
+    "careers_page": "https://careers.adobe.com/"
+  },
+  {
+    "company": "Salesforce",
+    "hq_or_india_hubs": [
+      "Hyderabad",
+      "Bengaluru"
+    ],
+    "category": "Global SaaS",
+    "ats_type": "workday",
+    "slug": "salesforce",
+    "fetch_method": "http_post_json",
+    "api_url": "https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/External_Career_Site/jobs",
+    "careers_page": "https://careers.salesforce.com/"
+  },
+  {
+    "company": "Walmart Global Tech",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Chennai"
+    ],
+    "category": "Global Retail Tech",
+    "ats_type": "workday",
+    "slug": "walmart",
+    "fetch_method": "http_post_json",
+    "api_url": "https://walmart.wd5.myworkdayjobs.com/wday/cxs/walmart/WalmartExternal/jobs",
+    "careers_page": "https://careers.walmart.com/"
+  },
+  {
+    "company": "Mastercard",
+    "hq_or_india_hubs": [
+      "Pune",
+      "Gurugram"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "workday",
+    "slug": "mastercard",
+    "fetch_method": "http_post_json",
+    "api_url": "https://mastercard.wd1.myworkdayjobs.com/wday/cxs/mastercard/CorporateCareers/jobs",
+    "careers_page": "https://careers.mastercard.com/"
+  },
+  {
+    "company": "Intel",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Global Semiconductor",
+    "ats_type": "workday",
+    "slug": "intel",
+    "fetch_method": "http_post_json",
+    "api_url": "https://intel.wd1.myworkdayjobs.com/wday/cxs/intel/External/jobs",
+    "careers_page": "https://jobs.intel.com/"
+  },
+  {
+    "company": "Dell Technologies",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Global Hardware/Software MNC",
+    "ats_type": "workday",
+    "slug": "dell",
+    "fetch_method": "http_post_json",
+    "api_url": "https://dell.wd1.myworkdayjobs.com/wday/cxs/dell/External/jobs",
+    "careers_page": "https://jobs.dell.com/"
+  },
+  {
+    "company": "Netflix",
+    "hq_or_india_hubs": [
+      "Remote-India"
+    ],
+    "category": "Global Product",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://jobs.netflix.com/"
+  },
+  {
+    "company": "Meta",
+    "hq_or_india_hubs": [
+      "Hyderabad",
+      "Bengaluru"
+    ],
+    "category": "Global Big Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.metacareers.com/"
+  },
+  {
+    "company": "Apple",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Global Big Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://jobs.apple.com/en-in/search"
+  },
+  {
+    "company": "Oracle",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad",
+      "Pune"
+    ],
+    "category": "Global Big Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.oracle.com/"
+  },
+  {
+    "company": "SAP",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Gurugram",
+      "Mumbai"
+    ],
+    "category": "Global Enterprise Software",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://jobs.sap.com/"
+  },
+  {
+    "company": "Cisco",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Networking MNC",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://jobs.cisco.com/"
+  },
+  {
+    "company": "Goldman Sachs",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad"
+    ],
+    "category": "Global Finance Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.goldmansachs.com/careers/"
+  },
+  {
+    "company": "JPMorgan Chase",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Hyderabad",
+      "Mumbai"
+    ],
+    "category": "Global Finance Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://careers.jpmorgan.com/"
+  },
+  {
+    "company": "Morgan Stanley",
+    "hq_or_india_hubs": [
+      "Mumbai",
+      "Bengaluru"
+    ],
+    "category": "Global Finance Tech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.morganstanley.com/people-opportunities"
+  },
+  {
+    "company": "American Express",
+    "hq_or_india_hubs": [
+      "Gurugram",
+      "Bengaluru"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://www.americanexpress.com/en-in/careers/"
+  },
+  {
+    "company": "Visa",
+    "hq_or_india_hubs": [
+      "Bengaluru"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://usa.visa.com/careers.html"
+  },
+  {
+    "company": "PayPal",
+    "hq_or_india_hubs": [
+      "Chennai",
+      "Bengaluru"
+    ],
+    "category": "Global Fintech",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://paypal.eightfold.ai/careers"
+  },
+  {
+    "company": "Broadcom (VMware)",
+    "hq_or_india_hubs": [
+      "Bengaluru",
+      "Pune"
+    ],
+    "category": "Global Semiconductor/Software",
+    "ats_type": "custom",
+    "slug": null,
+    "fetch_method": "custom_or_headless",
+    "api_url": null,
+    "careers_page": "https://broadcom.wd1.myworkdayjobs.com/External_Career"
+  }
 ]
